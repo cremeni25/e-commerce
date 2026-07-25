@@ -1,0 +1,36 @@
+/*
+Theme Name: Cremeni Store
+Theme URI: https://www.cremeni.com.br
+Author: Cremeni
+Description: Tema oficial da loja virtual Cremeni, desenvolvido para WordPress e WooCommerce.
+Version: 0.1.0
+Text Domain: cremeni-store
+Requires at least: 6.5
+Requires PHP: 8.1
+*/
+
+:root {
+  --cremeni-content-width: 1200px;
+  --cremeni-spacing: 1.5rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.6;
+}
+
+.cremeni-container {
+  width: min(100% - 2rem, var(--cremeni-content-width));
+  margin-inline: auto;
+}
