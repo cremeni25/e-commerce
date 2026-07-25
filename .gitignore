@@ -1,0 +1,44 @@
+# WordPress core
+/wp-admin/
+/wp-includes/
+/wp-*.php
+/index.php
+/license.txt
+/readme.html
+/xmlrpc.php
+
+# Configuration and secrets
+wp-config.php
+wp-config-*.php
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.ppk
+
+# User-generated and temporary content
+/wp-content/uploads/
+/wp-content/cache/
+/wp-content/upgrade/
+/wp-content/backups*/
+/wp-content/ai1wm-backups/
+/wp-content/wflogs/
+/wp-content/debug.log
+*.log
+
+# Third-party plugins and themes
+/wp-content/plugins/*
+!/wp-content/plugins-custom/
+/wp-content/themes/*
+!/wp-content/themes/cremeni-store/
+
+# Local and editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+node_modules/
+vendor/
+*.zip
+*.tar.gz
