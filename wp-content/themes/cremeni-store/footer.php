@@ -12,12 +12,13 @@ if (! defined('ABSPATH')) {
 <footer class="site-footer">
     <div class="cremeni-container site-footer__grid">
         <section>
-            <h2 class="site-footer__title">CREMENI</h2>
-            <p><?php esc_html_e('Suplementação prática para quem busca saúde, energia e performance.', 'cremeni-store'); ?></p>
+            <h2 class="site-footer__title">CREMENI STORE</h2>
+            <p><?php esc_html_e('E-commerce multimarcas para suplementos, produtos fitness, roupas, acessórios e equipamentos. Operação com estoques e entregas realizadas por parceiros selecionados.', 'cremeni-store'); ?></p>
         </section>
 
         <section>
             <h2 class="site-footer__title"><?php esc_html_e('Atendimento', 'cremeni-store'); ?></h2>
+            <p><?php esc_html_e('Atendimento digital para todo o Brasil.', 'cremeni-store'); ?></p>
             <p><?php esc_html_e('São Caetano do Sul — SP', 'cremeni-store'); ?></p>
         </section>
 
@@ -35,7 +36,7 @@ if (! defined('ABSPATH')) {
     </div>
 
     <div class="cremeni-container site-footer__bottom">
-        <p>&copy; <?php echo esc_html((string) gmdate('Y')); ?> CREMENI. <?php esc_html_e('Todos os direitos reservados.', 'cremeni-store'); ?></p>
+        <p>&copy; <?php echo esc_html((string) gmdate('Y')); ?> CREMENI STORE. <?php esc_html_e('Todos os direitos reservados.', 'cremeni-store'); ?></p>
     </div>
 </footer>
 <?php wp_footer(); ?>
