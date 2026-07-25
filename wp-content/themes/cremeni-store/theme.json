@@ -1,0 +1,63 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 3,
+  "settings": {
+    "appearanceTools": true,
+    "layout": {
+      "contentSize": "820px",
+      "wideSize": "1280px"
+    },
+    "color": {
+      "defaultPalette": false,
+      "palette": [
+        { "slug": "cremeni-black", "color": "#0d0d0d", "name": "Cremeni Preto" },
+        { "slug": "cremeni-surface", "color": "#1c1c1c", "name": "Cremeni Superfície" },
+        { "slug": "cremeni-lime", "color": "#a8ff00", "name": "Cremeni Lima" },
+        { "slug": "cremeni-white", "color": "#ffffff", "name": "Cremeni Branco" },
+        { "slug": "cremeni-muted", "color": "#a4a4a4", "name": "Cremeni Cinza" }
+      ]
+    },
+    "spacing": {
+      "units": ["px", "rem", "%", "vw"]
+    },
+    "typography": {
+      "fluid": true,
+      "fontFamilies": [
+        {
+          "fontFamily": "Montserrat, Arial, Helvetica, sans-serif",
+          "name": "Montserrat",
+          "slug": "montserrat"
+        }
+      ]
+    }
+  },
+  "styles": {
+    "color": {
+      "background": "#0d0d0d",
+      "text": "#ffffff"
+    },
+    "typography": {
+      "fontFamily": "var:preset|font-family|montserrat",
+      "lineHeight": "1.6"
+    },
+    "elements": {
+      "button": {
+        "color": {
+          "background": "#a8ff00",
+          "text": "#0d0d0d"
+        },
+        "border": {
+          "radius": "5px"
+        },
+        "typography": {
+          "fontWeight": "800"
+        }
+      },
+      "link": {
+        "color": {
+          "text": "#a8ff00"
+        }
+      }
+    }
+  }
+}
