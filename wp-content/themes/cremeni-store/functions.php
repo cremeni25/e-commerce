@@ -52,6 +52,13 @@ function cremeni_store_assets(): void
         $version
     );
 
+    wp_enqueue_style(
+        'cremeni-store-components',
+        get_template_directory_uri() . '/assets/css/components.css',
+        ['cremeni-store'],
+        $version
+    );
+
     wp_enqueue_script(
         'cremeni-store-navigation',
         get_template_directory_uri() . '/assets/js/navigation.js',
@@ -133,3 +140,19 @@ function cremeni_store_woocommerce_products_per_page(): int
     return 12;
 }
 add_filter('loop_shop_per_page', 'cremeni_store_woocommerce_products_per_page');
+
+function cremeni_store_body_classes(array $classes): array
+{
+    if (function_exists('is_woocommerce') && is_woocommerce()) {
+        $classes[] = 'cremeni-commerce';
+    }
+
+    return $classes;
+}
+add_filter('body_class', 'cremeni_store_body_classes');
+
+function cremeni_store_account_intro(): void
+{
+    echo '<p class="cremeni-account-intro">' . esc_html__('Acompanhe pedidos, endereços, downloads e dados da sua conta Cremeni Store.', 'cremeni-store') . '</p>';
+}
+add_action('woocommerce_account_dashboard', 'cremeni_store_account_intro', 5);
