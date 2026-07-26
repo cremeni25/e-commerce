@@ -1,0 +1,45 @@
+name: Qualidade do tema
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  php-syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obter código
+        uses: actions/checkout@v4
+
+      - name: Configurar PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          coverage: none
+
+      - name: Validar sintaxe PHP
+        run: find wp-content -type f -name '*.php' -print0 | xargs -0 -n1 php -l
+
+  repository-safety:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obter código
+        uses: actions/checkout@v4
+
+      - name: Bloquear segredos e conteúdo operacional
+        shell: bash
+        run: |
+          set -euo pipefail
+          forbidden=$(find . -type f \
+            \( -name 'wp-config.php' -o -name '.env' -o -name '*.pem' -o -name '*.key' -o -name '*.ppk' \) \
+            -not -path './.git/*' -print)
+          if [ -n "$forbidden" ]; then
+            echo "Arquivos proibidos encontrados:"
+            echo "$forbidden"
+            exit 1
+          fi
