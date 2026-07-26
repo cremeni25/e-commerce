@@ -1,0 +1,8 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/cremenib3a76cde/public_html/
+    - /bin/mkdir -p $DEPLOYPATH/wp-content/themes/cremeni-store
+    - /bin/mkdir -p $DEPLOYPATH/wp-content/mu-plugins
+    - /bin/cp -R wp-content/themes/cremeni-store/. $DEPLOYPATH/wp-content/themes/cremeni-store/
+    - /bin/cp -f wp-content/mu-plugins/cremeni-store-bootstrap.php $DEPLOYPATH/wp-content/mu-plugins/cremeni-store-bootstrap.php
