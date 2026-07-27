@@ -38,7 +38,15 @@ get_header();
             </div>
             <div class="hero__visual" aria-hidden="true">
                 <div class="hero__halo"></div>
-                <div class="hero__monogram">C</div>
+                <img
+                    class="hero__watermark"
+                    src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/cremeni-store-mark.svg'); ?>"
+                    alt=""
+                    width="520"
+                    height="455"
+                    loading="eager"
+                    decoding="async"
+                >
                 <div class="hero__product-card">
                     <span><?php esc_html_e('SUPERE • EVOLUA • CONQUISTE', 'cremeni-store'); ?></span>
                     <strong><?php esc_html_e('Performance para todos os níveis.', 'cremeni-store'); ?></strong>
