@@ -1,20 +1,28 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 150" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 126" role="img" aria-labelledby="title desc">
   <title id="title">Cremeni Store</title>
-  <desc id="desc">Logomarca horizontal da Cremeni Store em branco e verde-limão.</desc>
+  <desc id="desc">Logomarca oficial horizontal da Cremeni Store, com símbolo esportivo em verde-limão e branco.</desc>
   <defs>
     <linearGradient id="lime" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#d7ff53"/>
-      <stop offset="0.48" stop-color="#a8ff00"/>
+      <stop offset="0" stop-color="#dfff42"/>
+      <stop offset="0.5" stop-color="#a8ff00"/>
       <stop offset="1" stop-color="#78b900"/>
     </linearGradient>
+    <linearGradient id="silver" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.55" stop-color="#f1f1f1"/>
+      <stop offset="1" stop-color="#bdbdbd"/>
+    </linearGradient>
   </defs>
-  <g transform="translate(12 13) skewX(-12)">
-    <path fill="url(#lime)" d="M25 8h118l-16 25H67c-11 0-19 4-24 12l-18 29c-8 13-1 26 14 26h50l11-18H58l16-25h86l-38 61H25C3 118-9 97 3 77l28-45C39 18 51 8 68 8z"/>
-    <path fill="#f4f4f4" d="M73 43h82l-15 24H85z" opacity=".96"/>
+
+  <g transform="translate(8 8) skewX(-10)">
+    <path fill="url(#lime)" d="M24 0h104l-18 22H55c-8 0-14 3-18 9l-10 15c-4 6 0 12 8 12h57l-17 22H21C2 80-7 61 3 46l18-28C28 6 38 0 52 0z"/>
+    <path fill="url(#silver)" d="M52 42h77c18 0 26 19 16 34l-18 28c-7 11-17 16-31 16H-7l18-22h56c8 0 14-3 18-9l10-15c4-6 0-12-8-12H34z"/>
+    <path fill="#0d0d0d" d="M35 24h69L92 40H45c-6 0-10 2-13 7l-4 6c-3 4 0 7 5 7h49L70 76H20c-13 0-19-13-12-24l12-18c4-7 9-10 15-10z"/>
+    <path fill="#0d0d0d" d="M43 44h66c13 0 19 13 12 24l-12 18c-5 7-12 11-20 11H18l12-16h51c6 0 10-2 13-7l4-6c3-4 0-7-5-7H31z"/>
   </g>
-  <g transform="translate(188 26)">
-    <text x="0" y="54" fill="#ffffff" font-family="Arial Black,Arial,sans-serif" font-size="48" font-style="italic" font-weight="900" letter-spacing="2">CREMENI</text>
-    <text x="131" y="91" fill="#a8ff00" font-family="Arial,Helvetica,sans-serif" font-size="22" font-weight="800" letter-spacing="12">STORE</text>
-    <text x="1" y="120" fill="#c7c7c7" font-family="Arial,Helvetica,sans-serif" font-size="11" font-weight="700" letter-spacing="3">SUPERE • EVOLUA • CONQUISTE</text>
+
+  <g transform="translate(165 19) skewX(-8)">
+    <text x="0" y="48" fill="#ffffff" stroke="#0d0d0d" stroke-width="1.4" paint-order="stroke" font-family="Arial Black,Arial,sans-serif" font-size="50" font-style="italic" font-weight="900" letter-spacing="1.5">CREMENI</text>
+    <text x="154" y="83" fill="#a8ff00" font-family="Arial,Helvetica,sans-serif" font-size="22" font-style="italic" font-weight="800" letter-spacing="11">STORE</text>
   </g>
 </svg>
