@@ -40,34 +40,52 @@ function cremeni_store_setup(): void
 }
 add_action('after_setup_theme', 'cremeni_store_setup');
 
+function cremeni_store_asset_version(string $relativePath): string
+{
+    $absolutePath = get_template_directory() . $relativePath;
+
+    if (is_file($absolutePath)) {
+        return (string) filemtime($absolutePath);
+    }
+
+    $theme = wp_get_theme();
+    return $theme->get('Version') ?: '0.4.0';
+}
+
 function cremeni_store_assets(): void
 {
-    $theme = wp_get_theme();
-    $version = $theme->get('Version') ?: '0.1.0';
-
     wp_enqueue_style(
         'cremeni-store',
         get_stylesheet_uri(),
         [],
-        $version
+        cremeni_store_asset_version('/style.css')
     );
 
     wp_enqueue_style(
         'cremeni-store-components',
         get_template_directory_uri() . '/assets/css/components.css',
         ['cremeni-store'],
-        $version
+        cremeni_store_asset_version('/assets/css/components.css')
     );
 
     wp_enqueue_script(
         'cremeni-store-navigation',
         get_template_directory_uri() . '/assets/js/navigation.js',
         [],
-        $version,
+        cremeni_store_asset_version('/assets/js/navigation.js'),
         true
     );
 }
 add_action('wp_enqueue_scripts', 'cremeni_store_assets');
+
+function cremeni_store_brand_icons(): void
+{
+    $markUrl = get_template_directory_uri() . '/assets/images/cremeni-store-mark.svg';
+    echo '<link rel="icon" href="' . esc_url($markUrl) . '" type="image/svg+xml">' . "\n";
+    echo '<link rel="mask-icon" href="' . esc_url($markUrl) . '" color="#a8ff00">' . "\n";
+}
+add_action('wp_head', 'cremeni_store_brand_icons', 2);
+add_action('admin_head', 'cremeni_store_brand_icons', 2);
 
 function cremeni_store_product_categories(): array
 {
