@@ -34,6 +34,28 @@
   font-weight: 900;
 }
 
+.site-brand__official-logo {
+  display: block;
+  width: clamp(210px, 18vw, 280px);
+  height: auto;
+  max-height: 68px;
+  object-fit: contain;
+  object-position: left center;
+}
+
+.site-brand .custom-logo-link {
+  display: inline-flex;
+  align-items: center;
+}
+
+.site-brand .custom-logo {
+  width: clamp(210px, 18vw, 280px);
+  max-width: none;
+  max-height: 68px;
+  object-fit: contain;
+  object-position: left center;
+}
+
 .page-hero {
   padding: clamp(4rem, 8vw, 7rem) 0;
   border-bottom: 1px solid var(--cremeni-border);
@@ -163,8 +185,29 @@
   color: var(--cremeni-lime);
 }
 
+@media (max-width: 1024px) {
+  .site-brand__official-logo,
+  .site-brand .custom-logo {
+    width: 225px;
+  }
+}
+
 @media (max-width: 820px) {
+  .site-brand__official-logo,
+  .site-brand .custom-logo {
+    width: 205px;
+    max-height: 58px;
+  }
+
   .sports-catalog__grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .site-brand__official-logo,
+  .site-brand .custom-logo {
+    width: 174px;
+    max-height: 50px;
   }
 }
