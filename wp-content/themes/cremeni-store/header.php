@@ -28,18 +28,14 @@ if (! defined('ABSPATH')) {
     </div>
 
     <div class="cremeni-container site-header__main">
-        <a class="site-brand" href="<?php echo esc_url(home_url('/')); ?>" aria-label="<?php esc_attr_e('Página inicial da Cremeni Store', 'cremeni-store'); ?>">
-            <?php if (has_custom_logo()) : ?>
-                <?php the_custom_logo(); ?>
-            <?php else : ?>
-                <img
-                    class="site-brand__official-logo"
-                    src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/cremeni-store-logo.svg'); ?>"
-                    width="260"
-                    height="75"
-                    alt="<?php esc_attr_e('Cremeni Store — Supere, evolua, conquiste', 'cremeni-store'); ?>"
-                >
-            <?php endif; ?>
+        <a class="site-brand" href="<?php echo esc_url(home_url('/')); ?>" aria-label="<?php esc_attr_e('Página inicial da Cremeni', 'cremeni-store'); ?>">
+            <img
+                class="site-brand__official-logo"
+                src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/cremeni-store-logo.svg'); ?>"
+                width="280"
+                height="63"
+                alt="<?php esc_attr_e('Cremeni', 'cremeni-store'); ?>"
+            >
         </a>
 
         <?php if (function_exists('get_product_search_form')) : ?>
