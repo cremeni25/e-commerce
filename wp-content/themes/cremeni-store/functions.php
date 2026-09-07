@@ -78,6 +78,73 @@ function cremeni_store_assets(): void
 }
 add_action('wp_enqueue_scripts', 'cremeni_store_assets');
 
+/**
+ * CSS crítico final para impedir que estilos adicionais/plugins comprimam o layout desktop.
+ * É impresso depois do CSS customizado do WordPress para preservar a largura real da loja.
+ */
+function cremeni_store_layout_guard(): void
+{
+    ?>
+    <style id="cremeni-layout-guard">
+        html,
+        body {
+            width: 100% !important;
+            min-width: 100% !important;
+            max-width: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        body {
+            display: block !important;
+            background: #0d0d0d !important;
+            overflow-x: hidden !important;
+            transform: none !important;
+            zoom: 1 !important;
+        }
+
+        .site-header,
+        #conteudo,
+        .site-footer {
+            width: 100% !important;
+            max-width: none !important;
+            margin-inline: 0 !important;
+        }
+
+        .cremeni-container {
+            width: min(calc(100% - 48px), 1440px) !important;
+            max-width: 1440px !important;
+            min-width: 0 !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+
+        .hero__grid {
+            grid-template-columns: minmax(0, 1.08fr) minmax(360px, .92fr) !important;
+        }
+
+        .hero h1 {
+            font-size: clamp(3.6rem, 5.4vw, 6.2rem) !important;
+        }
+
+        @media (max-width: 900px) {
+            .cremeni-container {
+                width: min(calc(100% - 32px), 100%) !important;
+            }
+
+            .hero__grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            .hero h1 {
+                font-size: clamp(2.8rem, 11vw, 5rem) !important;
+            }
+        }
+    </style>
+    <?php
+}
+add_action('wp_head', 'cremeni_store_layout_guard', 999);
+
 function cremeni_store_brand_icons(): void
 {
     $markUrl = get_template_directory_uri() . '/assets/images/cremeni-store-mark.svg';
