@@ -40,10 +40,10 @@ get_header();
                 <div class="hero__halo"></div>
                 <img
                     class="hero__watermark"
-                    src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/cremeni-store-mark.svg'); ?>"
+                    src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/cremeni-store-logo.svg'); ?>"
                     alt=""
-                    width="520"
-                    height="455"
+                    width="1090"
+                    height="246"
                     loading="eager"
                     decoding="async"
                 >
