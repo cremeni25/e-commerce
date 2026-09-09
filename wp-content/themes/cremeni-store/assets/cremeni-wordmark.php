@@ -1,12 +1,7 @@
 <?php
-/**
- * Wordmark vetorial resiliente da interface CREMENI.
- *
- * @package CremeniStore
- */
+/** Assinatura gráfica oficial CREMENI: imagem preservada, sem reconstrução tipográfica por CSS. @package CremeniStore */
 if (! defined('ABSPATH')) { exit; }
 ?>
-<span class="cremeni-wordmark" aria-label="CREMENI">
-    <span class="cremeni-wordmark__mark" aria-hidden="true"><i></i><b></b></span>
-    <span class="cremeni-wordmark__name">CREMENI</span>
+<span class="cremeni-wordmark cremeni-wordmark--official">
+    <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/cremeni-store-logo.svg'); ?>" alt="CREMENI" decoding="async">
 </span>
