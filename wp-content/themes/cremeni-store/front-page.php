@@ -12,6 +12,7 @@ if (! defined('ABSPATH')) {
 $categories = cremeni_store_product_categories();
 $sports = cremeni_store_sports();
 $shop_url = function_exists('wc_get_page_permalink') ? wc_get_page_permalink('shop') : home_url('/loja/');
+$cremeni_official_logo = require get_template_directory() . '/assets/cremeni-official-logo-data.php';
 
 get_header();
 ?>
@@ -21,7 +22,7 @@ get_header();
             <div class="hero__content">
                 <p class="eyebrow"><?php esc_html_e('CREMENI • SAÚDE • PERFORMANCE • MOVIMENTO', 'cremeni-store'); ?></p>
                 <h1><?php esc_html_e('Viva sua melhor versão.', 'cremeni-store'); ?></h1>
-                <p><?php esc_html_e('Produtos esportivos, suplementos, vestuário, acessórios, equipamentos e conteúdos selecionados para apoiar saúde, treino, evolução e performance.', 'cremeni-store'); ?></p>
+                <p><?php esc_html_e('Uma curadoria de produtos, parceiros e conteúdos para quem busca saúde, movimento, evolução e performance em diferentes momentos da vida.', 'cremeni-store'); ?></p>
                 <div class="hero__actions">
                     <a class="button button--primary" href="<?php echo esc_url($shop_url); ?>">
                         <?php esc_html_e('Explorar produtos', 'cremeni-store'); ?>
@@ -32,13 +33,13 @@ get_header();
                 </div>
                 <ul class="hero__proof" aria-label="<?php esc_attr_e('Diferenciais da loja', 'cremeni-store'); ?>">
                     <li><?php esc_html_e('Parceiros selecionados', 'cremeni-store'); ?></li>
-                    <li><?php esc_html_e('Sem estoque próprio', 'cremeni-store'); ?></li>
+                    <li><?php esc_html_e('Curadoria CREMENI', 'cremeni-store'); ?></li>
                     <li><?php esc_html_e('Entrega para todo o Brasil', 'cremeni-store'); ?></li>
                 </ul>
             </div>
             <div class="hero__visual" aria-hidden="true">
                 <div class="hero__halo"></div>
-                <div class="hero__brand-signature">cremeni</div>
+                <img class="hero__official-wordmark" src="<?php echo esc_attr($cremeni_official_logo); ?>" alt="" width="1200" height="335" loading="eager" decoding="async">
                 <div class="hero__product-card">
                     <span><?php esc_html_e('SUPERE • EVOLUA • CONQUISTE', 'cremeni-store'); ?></span>
                     <strong><?php esc_html_e('Uma marca. Diferentes caminhos para evoluir.', 'cremeni-store'); ?></strong>
@@ -49,9 +50,9 @@ get_header();
 
     <section class="trust-strip">
         <div class="cremeni-container trust-strip__grid">
-            <div><strong><?php esc_html_e('Parceiros selecionados', 'cremeni-store'); ?></strong><span><?php esc_html_e('Operação com estoques de terceiros e marcas alinhadas ao posicionamento Cremeni.', 'cremeni-store'); ?></span></div>
-            <div><strong><?php esc_html_e('Ecossistema esportivo', 'cremeni-store'); ?></strong><span><?php esc_html_e('Produtos e conteúdos para diferentes objetivos, esportes e níveis de prática.', 'cremeni-store'); ?></span></div>
-            <div><strong><?php esc_html_e('Compra segura', 'cremeni-store'); ?></strong><span><?php esc_html_e('Estrutura preparada para checkout, pagamento e atendimento digital.', 'cremeni-store'); ?></span></div>
+            <div><strong><?php esc_html_e('Parceiros selecionados', 'cremeni-store'); ?></strong><span><?php esc_html_e('Marcas e fornecedores alinhados ao posicionamento CREMENI.', 'cremeni-store'); ?></span></div>
+            <div><strong><?php esc_html_e('Ecossistema esportivo', 'cremeni-store'); ?></strong><span><?php esc_html_e('Produtos para diferentes objetivos, modalidades e níveis de prática.', 'cremeni-store'); ?></span></div>
+            <div><strong><?php esc_html_e('Compra segura', 'cremeni-store'); ?></strong><span><?php esc_html_e('Checkout, pagamento e atendimento digital estruturados para a operação.', 'cremeni-store'); ?></span></div>
         </div>
     </section>
 
@@ -60,7 +61,7 @@ get_header();
             <div class="section-heading section-heading--split">
                 <div>
                     <p class="eyebrow"><?php esc_html_e('Compre por categoria', 'cremeni-store'); ?></p>
-                    <h2><?php esc_html_e('Tudo o que apoia sua rotina de saúde, treino e performance.', 'cremeni-store'); ?></h2>
+                    <h2><?php esc_html_e('Escolhas para saúde, treino e performance.', 'cremeni-store'); ?></h2>
                 </div>
                 <a class="text-link" href="<?php echo esc_url($shop_url); ?>"><?php esc_html_e('Ver catálogo completo', 'cremeni-store'); ?></a>
             </div>
@@ -90,8 +91,8 @@ get_header();
         <div class="cremeni-container">
             <div class="section-heading">
                 <p class="eyebrow"><?php esc_html_e('Encontre pela sua modalidade', 'cremeni-store'); ?></p>
-                <h2><?php esc_html_e('A Cremeni acompanha o seu esporte.', 'cremeni-store'); ?></h2>
-                <p><?php esc_html_e('A identidade CREMENI permanece única. A curadoria de produtos, conteúdos e recomendações muda conforme a modalidade e a necessidade de cada público.', 'cremeni-store'); ?></p>
+                <h2><?php esc_html_e('A CREMENI acompanha o seu esporte.', 'cremeni-store'); ?></h2>
+                <p><?php esc_html_e('A marca permanece única. A curadoria de produtos e recomendações se adapta à modalidade e à necessidade de cada público.', 'cremeni-store'); ?></p>
             </div>
             <div class="sports-grid">
                 <?php foreach ($sports as $slug => $sport) : ?>
@@ -109,7 +110,7 @@ get_header();
             <div class="cremeni-container">
                 <div class="section-heading section-heading--split">
                     <div>
-                        <p class="eyebrow"><?php esc_html_e('Seleção Cremeni', 'cremeni-store'); ?></p>
+                        <p class="eyebrow"><?php esc_html_e('Seleção CREMENI', 'cremeni-store'); ?></p>
                         <h2><?php esc_html_e('Produtos em destaque', 'cremeni-store'); ?></h2>
                     </div>
                     <a class="text-link" href="<?php echo esc_url($shop_url); ?>"><?php esc_html_e('Ir para a loja', 'cremeni-store'); ?></a>
@@ -123,10 +124,10 @@ get_header();
         <div class="cremeni-container brand-story__grid">
             <div>
                 <p class="eyebrow"><?php esc_html_e('CREMENI', 'cremeni-store'); ?></p>
-                <h2><?php esc_html_e('Um ecossistema digital para saúde, movimento e performance.', 'cremeni-store'); ?></h2>
+                <h2><?php esc_html_e('Uma marca que conecta saúde, movimento e performance.', 'cremeni-store'); ?></h2>
             </div>
             <div>
-                <p><?php esc_html_e('A CREMENI integra comércio multimarcas, estoques de parceiros e curadoria por modalidade. A evolução da plataforma inclui infoprodutos, conteúdos e programas digitais próprios, mantendo a marca como eixo central de toda a experiência.', 'cremeni-store'); ?></p>
+                <p><?php esc_html_e('A CREMENI reúne comércio multimarcas, parceiros selecionados, curadoria por modalidade e uma evolução planejada para conteúdos e produtos digitais próprios. A marca é o eixo central de toda a experiência.', 'cremeni-store'); ?></p>
             </div>
         </div>
     </section>
