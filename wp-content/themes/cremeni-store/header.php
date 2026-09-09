@@ -22,8 +22,8 @@ if (! defined('ABSPATH')) {
 <header class="site-header">
     <div class="site-header__utility">
         <div class="cremeni-container utility-bar">
-            <span><?php esc_html_e('Produtos de parceiros selecionados • Entrega para todo o Brasil', 'cremeni-store'); ?></span>
-            <span><?php esc_html_e('Compra segura e atendimento especializado', 'cremeni-store'); ?></span>
+            <span><?php esc_html_e('Esporte • Pet Mimos • Guias Cremeni', 'cremeni-store'); ?></span>
+            <span><?php esc_html_e('Seleção criteriosa • Dropshipping nacional • Conteúdo próprio', 'cremeni-store'); ?></span>
         </div>
     </div>
 
