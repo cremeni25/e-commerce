@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Guias Cremeni
  * Description: Biblioteca editorial proprietária da CREMENI para corpo, mente, pet, vínculo e raças.
- * Version: 0.1.0
+ * Version: 0.2.0
  * Author: Cremeni
  */
 
@@ -72,9 +72,9 @@ add_action('init', 'cremeni_guides_seed_collections', 20);
 function cremeni_guides_distribution_modes(): array
 {
     return [
-        'gratuito'          => 'Gratuito',
-        'associado_compra'  => 'Benefício associado à compra',
-        'premium_futuro'    => 'Premium futuro',
+        'gratuito'         => 'Gratuito',
+        'associado_compra' => 'Benefício associado à compra',
+        'premium_futuro'   => 'Premium futuro',
     ];
 }
 
@@ -91,14 +91,7 @@ function cremeni_guides_editorial_statuses(): array
 
 function cremeni_guides_meta_box(): void
 {
-    add_meta_box(
-        'cremeni-guide-governance',
-        'Governança Editorial CREMENI',
-        'cremeni_guides_render_meta_box',
-        'cremeni_guide',
-        'normal',
-        'high'
-    );
+    add_meta_box('cremeni-guide-governance', 'Governança Editorial CREMENI', 'cremeni_guides_render_meta_box', 'cremeni_guide', 'normal', 'high');
 }
 add_action('add_meta_boxes_cremeni_guide', 'cremeni_guides_meta_box');
 
@@ -171,9 +164,12 @@ function cremeni_guides_save(int $post_id): void
     $editorial_status = (string) get_post_meta($post_id, '_cremeni_guide_editorial_status', true);
     $professional_reviewer = trim((string) get_post_meta($post_id, '_cremeni_guide_professional_reviewer', true));
 
-    if ($sensitivity >= 3 && get_post_status($post_id) === 'publish' && ($editorial_status !== 'aprovado' || $professional_reviewer === '')) {
+    if (get_post_status($post_id) === 'publish' && $editorial_status !== 'aprovado') {
         wp_update_post(['ID' => $post_id, 'post_status' => 'draft']);
-        set_transient('cremeni_guide_publish_blocked_' . get_current_user_id(), 'Conteúdo clínico/veterinário exige status editorial aprovado e revisor profissional identificado.', 60);
+        set_transient('cremeni_guide_publish_blocked_' . get_current_user_id(), 'Todo Guia Cremeni precisa estar com status editorial Aprovado antes da publicação.', 60);
+    } elseif ($sensitivity >= 3 && get_post_status($post_id) === 'publish' && $professional_reviewer === '') {
+        wp_update_post(['ID' => $post_id, 'post_status' => 'draft']);
+        set_transient('cremeni_guide_publish_blocked_' . get_current_user_id(), 'Conteúdo clínico/veterinário exige revisor profissional identificado antes da publicação.', 60);
     }
 
     $processing = false;
