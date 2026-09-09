@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Cremeni Store Bootstrap
  * Description: Cria a estrutura inicial da loja, páginas institucionais e categorias WooCommerce de forma idempotente.
- * Version: 0.1.0
+ * Version: 0.1.1
  * Author: Cremeni
  */
 
@@ -134,3 +134,74 @@ function cremeni_store_run_bootstrap(): void
     update_option('cremeni_store_bootstrap_version', CREMENI_STORE_BOOTSTRAP_VERSION);
 }
 add_action('admin_init', 'cremeni_store_run_bootstrap');
+
+/**
+ * Guarda visual final. Alguns estilos externos do WordPress/WooCommerce estavam
+ * sobrescrevendo cores, botões e links da homepage. Mantemos aqui apenas os
+ * elementos já homologados da identidade Cremeni.
+ */
+function cremeni_store_identity_guard(): void
+{
+    ?>
+    <style id="cremeni-identity-guard">
+        .hero h1,
+        .section-heading h2,
+        .brand-story h2,
+        .hero__product-card strong {
+            color: #ffffff !important;
+        }
+
+        .hero__content > p:not(.eyebrow),
+        .brand-story p,
+        .category-card p,
+        .sports-section .section-heading > p:last-child,
+        .trust-strip span,
+        .site-footer p {
+            color: #d2d2d2 !important;
+        }
+
+        .category-card,
+        .sport-card,
+        .category-card h3,
+        .sport-card strong,
+        .site-footer a {
+            color: #ffffff !important;
+        }
+
+        .eyebrow,
+        .category-card__index,
+        .category-card__action,
+        .text-link,
+        .sports-link,
+        .hero__product-card span,
+        .site-footer h3 {
+            color: #a8ff00 !important;
+        }
+
+        .button.button--primary,
+        .hero__actions .button--primary {
+            background: #a8ff00 !important;
+            border-color: #a8ff00 !important;
+            color: #0d0d0d !important;
+        }
+
+        .button.button--secondary,
+        .hero__actions .button--secondary {
+            background: transparent !important;
+            border-color: #a8ff00 !important;
+            color: #ffffff !important;
+        }
+
+        .site-brand__official-logo,
+        .hero__watermark {
+            visibility: visible !important;
+            opacity: 1;
+        }
+
+        .hero__watermark {
+            opacity: .26 !important;
+        }
+    </style>
+    <?php
+}
+add_action('wp_head', 'cremeni_store_identity_guard', 1000);
