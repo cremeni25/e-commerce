@@ -3,7 +3,7 @@
 if (! defined('ABSPATH')) { exit; }
 $categories = cremeni_store_product_categories();
 $sports = cremeni_store_sports();
-$shop_url = function_exists('wc_get_page_permalink') ? wc_get_page_permalink('shop') : home_url('/loja/');
+$shop_url = cremeni_store_catalog_url();
 get_header();
 ?>
 <main id="conteudo">

@@ -35,7 +35,7 @@ mkdir -p "$DEPLOY/wp-content/themes/cremeni-store"
 mkdir -p "$DEPLOY/wp-content/mu-plugins"
 
 cp -R "$REPO/wp-content/themes/cremeni-store/." "$DEPLOY/wp-content/themes/cremeni-store/"
-cp -f "$REPO/wp-content/mu-plugins/cremeni-store-bootstrap.php" "$DEPLOY/wp-content/mu-plugins/cremeni-store-bootstrap.php"
+cp -f "$REPO"/wp-content/mu-plugins/*.php "$DEPLOY/wp-content/mu-plugins/"
 
 printf '%s\n' "$LOCAL_SHA" > "$STATE"
 echo "[$(date '+%Y-%m-%d %H:%M:%S %z')] deploy concluído em ${LOCAL_SHA:0:7}"

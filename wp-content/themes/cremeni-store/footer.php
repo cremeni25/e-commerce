@@ -17,12 +17,18 @@ if (! defined('ABSPATH')) { exit; }
 
         <section>
             <h2 class="site-footer__title"><?php esc_html_e('Navegação', 'cremeni-store'); ?></h2>
-            <?php wp_nav_menu([
-                'theme_location' => 'footer',
-                'container' => false,
-                'menu_class' => 'site-footer__menu',
-                'fallback_cb' => false,
-            ]); ?>
+            <?php
+            if (has_nav_menu('footer')) {
+                wp_nav_menu([
+                    'theme_location' => 'footer',
+                    'container'      => false,
+                    'menu_class'     => 'site-footer__menu',
+                    'fallback_cb'    => false,
+                ]);
+            } else {
+                cremeni_store_render_fallback_menu('site-footer__menu');
+            }
+            ?>
         </section>
     </div>
 
