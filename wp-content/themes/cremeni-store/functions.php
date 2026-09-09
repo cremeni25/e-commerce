@@ -49,7 +49,7 @@ function cremeni_store_asset_version(string $relativePath): string
     }
 
     $theme = wp_get_theme();
-    return $theme->get('Version') ?: '0.4.0';
+    return $theme->get('Version') ?: '0.5.0';
 }
 
 function cremeni_store_assets(): void
@@ -154,32 +154,27 @@ function cremeni_store_brand_icons(): void
 add_action('wp_head', 'cremeni_store_brand_icons', 2);
 add_action('admin_head', 'cremeni_store_brand_icons', 2);
 
+/**
+ * Frentes comerciais oficiais da CREMENI.
+ *
+ * ESPORTE: compra principal, margem unitária protegida.
+ * PET MIMOS: cross-sell, afeto e recorrência com baixa fricção.
+ * GUIAS CREMENI: conteúdo proprietário para relacionamento e retenção.
+ */
 function cremeni_store_product_categories(): array
 {
     return [
-        'suplementos' => [
-            'label'       => __('Suplementos', 'cremeni-store'),
-            'description' => __('Proteínas, creatina, pré-treinos, vitaminas e recuperação.', 'cremeni-store'),
+        'esporte' => [
+            'label'       => __('Esporte', 'cremeni-store'),
+            'description' => __('Produtos selecionados para prática esportiva, treino, mobilidade e vida ativa.', 'cremeni-store'),
         ],
-        'alimentos-fitness' => [
-            'label'       => __('Alimentos fitness', 'cremeni-store'),
-            'description' => __('Produtos industrializados, embalados e enviados por parceiros.', 'cremeni-store'),
+        'pet-mimos' => [
+            'label'       => __('Pet Mimos', 'cremeni-store'),
+            'description' => __('Pequenos mimos, brinquedos e acessórios leves para companhia, passeio e vínculo.', 'cremeni-store'),
         ],
-        'roupas' => [
-            'label'       => __('Roupas', 'cremeni-store'),
-            'description' => __('Vestuário esportivo para treino, competição e rotina ativa.', 'cremeni-store'),
-        ],
-        'equipamentos' => [
-            'label'       => __('Equipamentos', 'cremeni-store'),
-            'description' => __('Itens para treino em casa, academia e modalidades específicas.', 'cremeni-store'),
-        ],
-        'acessorios' => [
-            'label'       => __('Acessórios', 'cremeni-store'),
-            'description' => __('Complementos para prática esportiva, transporte e organização.', 'cremeni-store'),
-        ],
-        'infoprodutos' => [
-            'label'       => __('Infoprodutos', 'cremeni-store'),
-            'description' => __('Cursos, programas, guias e conteúdos digitais em preparação.', 'cremeni-store'),
+        'guias-cremeni' => [
+            'label'       => __('Guias Cremeni', 'cremeni-store'),
+            'description' => __('Conteúdos curtos sobre corpo, mente, rotina, bem-estar e convivência com pets.', 'cremeni-store'),
         ],
     ];
 }
@@ -187,14 +182,15 @@ function cremeni_store_product_categories(): array
 function cremeni_store_sports(): array
 {
     return [
-        'natacao'    => __('Natação', 'cremeni-store'),
-        'corrida'    => __('Corrida', 'cremeni-store'),
-        'ciclismo'   => __('Ciclismo', 'cremeni-store'),
-        'musculacao' => __('Musculação', 'cremeni-store'),
-        'crossfit'   => __('Cross training', 'cremeni-store'),
-        'lutas'      => __('Lutas', 'cremeni-store'),
-        'futebol'    => __('Futebol', 'cremeni-store'),
-        'volei'      => __('Vôlei', 'cremeni-store'),
+        'natacao'       => __('Natação', 'cremeni-store'),
+        'futebol'       => __('Futebol', 'cremeni-store'),
+        'futsal'        => __('Futsal', 'cremeni-store'),
+        'beach-tennis'  => __('Beach Tennis', 'cremeni-store'),
+        'volei'         => __('Vôlei', 'cremeni-store'),
+        'badminton'     => __('Badminton', 'cremeni-store'),
+        'lutas'         => __('Lutas', 'cremeni-store'),
+        'funcional'     => __('Treino funcional', 'cremeni-store'),
+        'yoga-pilates'  => __('Yoga & Pilates', 'cremeni-store'),
     ];
 }
 
@@ -238,6 +234,6 @@ add_filter('body_class', 'cremeni_store_body_classes');
 
 function cremeni_store_account_intro(): void
 {
-    echo '<p class="cremeni-account-intro">' . esc_html__('Acompanhe pedidos, endereços, downloads e dados da sua conta Cremeni Store.', 'cremeni-store') . '</p>';
+    echo '<p class="cremeni-account-intro">' . esc_html__('Acompanhe pedidos, endereços, downloads e dados da sua conta Cremeni.', 'cremeni-store') . '</p>';
 }
 add_action('woocommerce_account_dashboard', 'cremeni_store_account_intro', 5);
