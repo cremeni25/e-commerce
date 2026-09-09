@@ -1,9 +1,5 @@
 <?php
-/**
- * Cabeçalho global do tema.
- *
- * @package CremeniStore
- */
+/** Cabeçalho global do tema. @package CremeniStore */
 if (! defined('ABSPATH')) { exit; }
 ?>
 <!doctype html>
@@ -30,15 +26,18 @@ if (! defined('ABSPATH')) { exit; }
         </a>
 
         <div class="site-header__actions">
-            <?php if (function_exists('wc_get_page_permalink')) : ?>
-                <a class="header-action" href="<?php echo esc_url(wc_get_page_permalink('myaccount')); ?>"><?php esc_html_e('Conta', 'cremeni-store'); ?></a>
-                <a class="header-action header-action--cart" href="<?php echo esc_url(wc_get_cart_url()); ?>">
+            <?php if (function_exists('wc_get_page_permalink') && function_exists('WC')) : ?>
+                <?php $account_url = wc_get_page_permalink('myaccount'); ?>
+                <?php $cart_url = function_exists('wc_get_cart_url') ? wc_get_cart_url() : home_url('/carrinho/'); ?>
+                <a class="header-action" href="<?php echo esc_url($account_url ?: home_url('/minha-conta/')); ?>"><?php esc_html_e('Conta', 'cremeni-store'); ?></a>
+                <a class="header-action header-action--cart" href="<?php echo esc_url($cart_url); ?>">
                     <span><?php esc_html_e('Carrinho', 'cremeni-store'); ?></span>
                     <span class="header-action__count"><?php echo esc_html((string) (WC()->cart ? WC()->cart->get_cart_contents_count() : 0)); ?></span>
                 </a>
             <?php endif; ?>
             <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu-principal">
-                <span class="screen-reader-text"><?php esc_html_e('Abrir menu', 'cremeni-store'); ?></span><span></span><span></span><span></span>
+                <span class="screen-reader-text"><?php esc_html_e('Abrir menu', 'cremeni-store'); ?></span>
+                <span></span><span></span><span></span>
             </button>
         </div>
 
@@ -52,7 +51,18 @@ if (! defined('ABSPATH')) { exit; }
     <div class="site-header__nav" id="menu-principal">
         <div class="cremeni-container site-header__nav-inner">
             <nav class="site-navigation" aria-label="<?php esc_attr_e('Menu principal', 'cremeni-store'); ?>">
-                <?php wp_nav_menu(['theme_location'=>'primary','container'=>false,'menu_class'=>'site-navigation__menu','fallback_cb'=>false]); ?>
+                <?php
+                if (has_nav_menu('primary')) {
+                    wp_nav_menu([
+                        'theme_location' => 'primary',
+                        'container'      => false,
+                        'menu_class'     => 'site-navigation__menu',
+                        'fallback_cb'    => false,
+                    ]);
+                } else {
+                    cremeni_store_render_fallback_menu('site-navigation__menu');
+                }
+                ?>
             </nav>
             <a class="sports-link" href="<?php echo esc_url(home_url('/#esportes')); ?>"><?php esc_html_e('Explorar esportes', 'cremeni-store'); ?></a>
         </div>
