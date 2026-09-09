@@ -31,13 +31,13 @@ $cremeni_official_logo = require get_template_directory() . '/assets/cremeni-off
 <header class="site-header">
     <div class="site-header__utility">
         <div class="cremeni-container utility-bar">
-            <span><?php esc_html_e('Produtos de parceiros selecionados • Entrega para todo o Brasil', 'cremeni-store'); ?></span>
-            <span><?php esc_html_e('Compra segura e atendimento especializado', 'cremeni-store'); ?></span>
+            <span><?php esc_html_e('CREMENI Esporte • PET Mimos • Guias CREMENI', 'cremeni-store'); ?></span>
+            <span><?php esc_html_e('Seleção criteriosa • Dropshipping nacional • Conteúdo próprio', 'cremeni-store'); ?></span>
         </div>
     </div>
 
     <div class="cremeni-container site-header__main">
-        <a class="site-brand site-brand--official" href="<?php echo esc_url(home_url('/')); ?>" aria-label="<?php esc_attr_e('Página inicial da Cremeni', 'cremeni-store'); ?>">
+        <a class="site-brand site-brand--official" href="<?php echo esc_url(home_url('/')); ?>" aria-label="<?php esc_attr_e('Página inicial da CREMENI', 'cremeni-store'); ?>">
             <img class="site-brand__official-wordmark" src="<?php echo esc_attr($cremeni_official_logo); ?>" alt="CREMENI" width="1200" height="335">
         </a>
 
@@ -76,7 +76,7 @@ $cremeni_official_logo = require get_template_directory() . '/assets/cremeni-off
                 ]);
                 ?>
             </nav>
-            <a class="sports-link" href="#esportes"><?php esc_html_e('Comprar por esporte', 'cremeni-store'); ?></a>
+            <a class="sports-link" href="<?php echo esc_url(home_url('/#esportes')); ?>"><?php esc_html_e('CREMENI Esporte', 'cremeni-store'); ?></a>
         </div>
     </div>
 </header>
