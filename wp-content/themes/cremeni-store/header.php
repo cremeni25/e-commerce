@@ -8,6 +8,8 @@
 if (! defined('ABSPATH')) {
     exit;
 }
+
+$cremeni_official_logo = require get_template_directory() . '/assets/cremeni-official-logo-data.php';
 ?>
 <!doctype html>
 <html <?php language_attributes(); ?>>
@@ -17,11 +19,10 @@ if (! defined('ABSPATH')) {
     <?php wp_head(); ?>
     <style id="cremeni-official-brand-hotfix">
         .site-brand--official{display:inline-flex;align-items:center;min-width:220px;text-decoration:none!important}
-        .site-brand__wordmark,.hero__brand-signature{font-family:Arial,Helvetica,sans-serif;font-weight:800;letter-spacing:-.055em;text-transform:lowercase;line-height:.82;color:#91c400;background:linear-gradient(180deg,#baff00 0%,#80a900 46%,#445d1a 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 20px rgba(168,255,0,.18)}
-        .site-brand__wordmark{font-size:clamp(2.15rem,3vw,3.35rem)}
-        .hero__brand-signature{position:relative;z-index:1;font-size:clamp(5.5rem,11vw,10rem);opacity:.20;white-space:nowrap;transform:rotate(-4deg);pointer-events:none;user-select:none}
+        .site-brand__official-wordmark{display:block;width:clamp(210px,18vw,300px);height:auto;max-height:72px;object-fit:contain;object-position:left center}
+        .hero__official-wordmark{display:block;position:relative;z-index:1;width:min(92%,620px);height:auto;opacity:.22;filter:drop-shadow(0 0 28px rgba(168,255,0,.28));transform:rotate(-3deg);pointer-events:none;user-select:none}
         .hero--brand-first .hero__visual{overflow:hidden}
-        @media(max-width:820px){.site-brand--official{min-width:170px}.site-brand__wordmark{font-size:2rem}.hero__brand-signature{font-size:clamp(4rem,20vw,7rem)}}
+        @media(max-width:820px){.site-brand--official{min-width:170px}.site-brand__official-wordmark{width:190px;max-height:58px}.hero__official-wordmark{width:min(88%,420px);opacity:.18}}
     </style>
 </head>
 <body <?php body_class(); ?>>
@@ -37,8 +38,7 @@ if (! defined('ABSPATH')) {
 
     <div class="cremeni-container site-header__main">
         <a class="site-brand site-brand--official" href="<?php echo esc_url(home_url('/')); ?>" aria-label="<?php esc_attr_e('Página inicial da Cremeni', 'cremeni-store'); ?>">
-            <span class="site-brand__wordmark" aria-hidden="true">cremeni</span>
-            <span class="screen-reader-text">CREMENI</span>
+            <img class="site-brand__official-wordmark" src="<?php echo esc_attr($cremeni_official_logo); ?>" alt="CREMENI" width="1200" height="335">
         </a>
 
         <?php if (function_exists('get_product_search_form')) : ?>
