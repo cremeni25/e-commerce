@@ -36,6 +36,25 @@ if (! defined('ABSPATH')) { exit; }
         <p>&copy; <?php echo esc_html((string) gmdate('Y')); ?> CREMENI. <?php esc_html_e('Todos os direitos reservados.', 'cremeni-store'); ?></p>
     </div>
 </footer>
-<?php wp_footer(); ?>
+<?php
+/**
+ * Um callback externo quebrado em wp_footer não pode derrubar toda a vitrine.
+ * O Throwable é registrado para diagnóstico administrativo e a resposta pública termina normalmente.
+ */
+try {
+    wp_footer();
+} catch (Throwable $error) {
+    try {
+        update_option('cremeni_runtime_last_fatal', [
+            'time'    => gmdate('c'),
+            'message' => sanitize_text_field($error->getMessage()),
+            'file'    => basename($error->getFile()),
+            'line'    => (int) $error->getLine(),
+        ], false);
+    } catch (Throwable $ignored) {
+        error_log('CREMENI wp_footer failure: ' . $error->getMessage());
+    }
+}
+?>
 </body>
 </html>
