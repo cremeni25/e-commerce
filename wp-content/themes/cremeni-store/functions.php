@@ -28,12 +28,13 @@ function cremeni_store_asset_version(string $relativePath): string {
     $path = get_template_directory() . $relativePath;
     if (is_file($path)) { return (string) filemtime($path); }
     $theme = wp_get_theme();
-    return $theme->get('Version') ?: '0.6.3';
+    return $theme->get('Version') ?: '0.6.4';
 }
 
 function cremeni_store_assets(): void {
     wp_enqueue_style('cremeni-store', get_stylesheet_uri(), [], cremeni_store_asset_version('/style.css'));
     wp_enqueue_style('cremeni-store-components', get_template_directory_uri() . '/assets/css/components.css', ['cremeni-store'], cremeni_store_asset_version('/assets/css/components.css'));
+    wp_enqueue_style('cremeni-store-catalog', get_template_directory_uri() . '/assets/css/catalog.css', ['cremeni-store','cremeni-store-components'], cremeni_store_asset_version('/assets/css/catalog.css'));
     wp_enqueue_script('cremeni-store-navigation', get_template_directory_uri() . '/assets/js/navigation.js', [], cremeni_store_asset_version('/assets/js/navigation.js'), true);
 }
 add_action('wp_enqueue_scripts', 'cremeni_store_assets');
@@ -64,10 +65,7 @@ function cremeni_store_initial(string $value): string {
     return strtoupper(substr($value,0,1));
 }
 
-/**
- * URLs por query string são deliberadas enquanto o rewrite da hospedagem é revalidado.
- * Funcionam mesmo quando .htaccess/permalinks ainda não foram regenerados.
- */
+/** URLs resilientes enquanto a hospedagem conclui a estabilização de rewrite. */
 function cremeni_store_page_url(string $slug): string {
     $page = get_page_by_path($slug, OBJECT, 'page');
     if ($page instanceof WP_Post) { return add_query_arg('page_id', (int) $page->ID, home_url('/')); }
@@ -86,7 +84,7 @@ function cremeni_store_fallback_menu_items(): array {
     return [
         ['label'=>__('Início','cremeni-store'),'url'=>home_url('/')],
         ['label'=>__('Loja','cremeni-store'),'url'=>cremeni_store_catalog_url()],
-        ['label'=>__('Esporte','cremeni-store'),'url'=>home_url('/#esportes')],
+        ['label'=>__('Esporte','cremeni-store'),'url'=>cremeni_store_product_category_url('esporte')],
         ['label'=>__('Pet Mimos','cremeni-store'),'url'=>cremeni_store_product_category_url('pet-mimos')],
         ['label'=>__('Guias CREMENI','cremeni-store'),'url'=>cremeni_store_page_url('guias-cremeni')],
         ['label'=>__('Atendimento','cremeni-store'),'url'=>cremeni_store_page_url('atendimento')],
@@ -117,6 +115,11 @@ function cremeni_store_body_classes(array $classes): array {
     return $classes;
 }
 add_filter('body_class','cremeni_store_body_classes');
+
+function cremeni_store_placeholder_image(string $src): string {
+    return get_template_directory_uri() . '/assets/images/product-image-pending.svg';
+}
+add_filter('woocommerce_placeholder_img_src', 'cremeni_store_placeholder_image');
 
 function cremeni_store_account_intro(): void {
     echo '<p class="cremeni-account-intro">' . esc_html__('Acompanhe pedidos, endereços, downloads e dados da sua conta CREMENI.','cremeni-store') . '</p>';
