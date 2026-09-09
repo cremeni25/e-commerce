@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Cremeni Store Bootstrap
  * Description: Mantém a estrutura institucional e comercial oficial da CREMENI de forma idempotente.
- * Version: 0.2.0
+ * Version: 0.2.1
  * Author: Cremeni
  */
 
@@ -12,7 +12,7 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
-const CREMENI_STORE_BOOTSTRAP_VERSION = '0.2.0';
+const CREMENI_STORE_BOOTSTRAP_VERSION = '0.2.1';
 
 function cremeni_store_bootstrap_page(string $title, string $slug, string $content = ''): int
 {
@@ -49,6 +49,11 @@ function cremeni_store_bootstrap_product_term(string $name, string $slug, string
     ]);
 
     return is_wp_error($term) ? 0 : (int) $term['term_id'];
+}
+
+function cremeni_store_bootstrap_lower(string $value): string
+{
+    return function_exists('mb_strtolower') ? mb_strtolower($value, 'UTF-8') : strtolower($value);
 }
 
 function cremeni_store_run_bootstrap(): void
@@ -119,7 +124,7 @@ function cremeni_store_run_bootstrap(): void
                 cremeni_store_bootstrap_product_term(
                     $name,
                     $slug,
-                    sprintf('Produtos CREMENI selecionados para %s.', mb_strtolower($name)),
+                    sprintf('Produtos CREMENI selecionados para %s.', cremeni_store_bootstrap_lower($name)),
                     $sport_parent
                 );
             }
@@ -129,20 +134,3 @@ function cremeni_store_run_bootstrap(): void
     update_option('cremeni_store_bootstrap_version', CREMENI_STORE_BOOTSTRAP_VERSION);
 }
 add_action('admin_init', 'cremeni_store_run_bootstrap');
-
-/** Mantém a identidade visual oficial contra sobrescritas de plugins. */
-function cremeni_store_identity_guard(): void
-{
-    ?>
-    <style id="cremeni-identity-guard">
-        .hero h1,.section-heading h2,.brand-story h2,.hero__product-card strong{color:#fff!important}
-        .hero__content>p:not(.eyebrow),.brand-story p,.category-card p,.sports-section .section-heading>p:last-child,.trust-strip span,.site-footer p{color:#d2d2d2!important}
-        .category-card,.sport-card,.category-card h3,.sport-card strong,.site-footer a{color:#fff!important}
-        .eyebrow,.category-card__index,.category-card__action,.text-link,.sports-link,.hero__product-card span,.site-footer h3{color:#a8ff00!important}
-        .button.button--primary,.hero__actions .button--primary{background:#a8ff00!important;border-color:#a8ff00!important;color:#0d0d0d!important}
-        .button.button--secondary,.hero__actions .button--secondary{background:transparent!important;border-color:#a8ff00!important;color:#fff!important}
-        .site-brand__official-wordmark,.hero__official-wordmark{visibility:visible!important}
-    </style>
-    <?php
-}
-add_action('wp_head', 'cremeni_store_identity_guard', 1000);
