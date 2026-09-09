@@ -116,6 +116,11 @@ function cremeni_store_body_classes(array $classes): array {
 }
 add_filter('body_class','cremeni_store_body_classes');
 
+function cremeni_store_placeholder_image(string $src): string {
+    return get_template_directory_uri() . '/assets/images/product-image-pending.svg';
+}
+add_filter('woocommerce_placeholder_img_src', 'cremeni_store_placeholder_image');
+
 function cremeni_store_account_intro(): void {
     echo '<p class="cremeni-account-intro">' . esc_html__('Acompanhe pedidos, endereços, downloads e dados da sua conta CREMENI.','cremeni-store') . '</p>';
 }
