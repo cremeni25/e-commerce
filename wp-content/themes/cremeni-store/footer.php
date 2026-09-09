@@ -1,19 +1,12 @@
 <?php
-/**
- * Rodapé global do tema.
- *
- * @package CremeniStore
- */
-
-if (! defined('ABSPATH')) {
-    exit;
-}
+/** Rodapé global do tema. @package CremeniStore */
+if (! defined('ABSPATH')) { exit; }
 ?>
 <footer class="site-footer">
     <div class="cremeni-container site-footer__grid">
         <section>
-            <h2 class="site-footer__title">CREMENI STORE</h2>
-            <p><?php esc_html_e('E-commerce multimarcas para suplementos, produtos fitness, roupas, acessórios e equipamentos. Operação com estoques e entregas realizadas por parceiros selecionados.', 'cremeni-store'); ?></p>
+            <h2 class="site-footer__title">CREMENI</h2>
+            <p><?php esc_html_e('Esporte, Pet Mimos e Guias CREMENI reunidos em uma experiência de compra e conteúdo para uma vida mais ativa, equilibrada e conectada.', 'cremeni-store'); ?></p>
         </section>
 
         <section>
@@ -24,19 +17,17 @@ if (! defined('ABSPATH')) {
 
         <section>
             <h2 class="site-footer__title"><?php esc_html_e('Navegação', 'cremeni-store'); ?></h2>
-            <?php
-            wp_nav_menu([
+            <?php wp_nav_menu([
                 'theme_location' => 'footer',
-                'container'      => false,
-                'menu_class'     => 'site-footer__menu',
-                'fallback_cb'    => false,
-            ]);
-            ?>
+                'container' => false,
+                'menu_class' => 'site-footer__menu',
+                'fallback_cb' => false,
+            ]); ?>
         </section>
     </div>
 
     <div class="cremeni-container site-footer__bottom">
-        <p>&copy; <?php echo esc_html((string) gmdate('Y')); ?> CREMENI STORE. <?php esc_html_e('Todos os direitos reservados.', 'cremeni-store'); ?></p>
+        <p>&copy; <?php echo esc_html((string) gmdate('Y')); ?> CREMENI. <?php esc_html_e('Todos os direitos reservados.', 'cremeni-store'); ?></p>
     </div>
 </footer>
 <?php wp_footer(); ?>
