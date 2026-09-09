@@ -12,6 +12,7 @@ if (! defined('ABSPATH')) {
 $categories = cremeni_store_product_categories();
 $sports = cremeni_store_sports();
 $shop_url = function_exists('wc_get_page_permalink') ? wc_get_page_permalink('shop') : home_url('/loja/');
+$guides_url = post_type_exists('cremeni_guide') ? get_post_type_archive_link('cremeni_guide') : home_url('/guias/');
 
 get_header();
 ?>
@@ -77,9 +78,13 @@ get_header();
                 <?php $index = 1; ?>
                 <?php foreach ($categories as $slug => $category) : ?>
                     <?php
-                    $category_url = function_exists('get_term_link') ? get_term_link($slug, 'product_cat') : $shop_url;
-                    if (is_wp_error($category_url)) {
-                        $category_url = $shop_url;
+                    if ($slug === 'guias-cremeni' && is_string($guides_url) && $guides_url !== '') {
+                        $category_url = $guides_url;
+                    } else {
+                        $category_url = function_exists('get_term_link') ? get_term_link($slug, 'product_cat') : $shop_url;
+                        if (is_wp_error($category_url)) {
+                            $category_url = $shop_url;
+                        }
                     }
                     ?>
                     <a class="category-card" href="<?php echo esc_url($category_url); ?>">
@@ -134,7 +139,8 @@ get_header();
                 <h2><?php esc_html_e('A compra pode terminar. A relação não precisa terminar.', 'cremeni-store'); ?></h2>
             </div>
             <div>
-                <p><?php esc_html_e('Os Guias Cremeni serão conteúdos proprietários, curtos e práticos sobre corpo, mente, rotina, vida ativa e convivência com pets. Eles poderão acompanhar produtos, apoiar recompra e criar novos motivos para o cliente retornar à Cremeni.', 'cremeni-store'); ?></p>
+                <p><?php esc_html_e('Os Guias Cremeni são conteúdos proprietários, curtos e práticos sobre corpo, mente, rotina, vida ativa e convivência com pets. Eles podem acompanhar produtos, apoiar recompra e criar novos motivos para o cliente retornar à Cremeni.', 'cremeni-store'); ?></p>
+                <?php if (is_string($guides_url) && $guides_url !== '') : ?><p><a class="text-link" href="<?php echo esc_url($guides_url); ?>"><?php esc_html_e('Explorar Guias Cremeni', 'cremeni-store'); ?></a></p><?php endif; ?>
             </div>
         </div>
     </section>
