@@ -9,6 +9,7 @@ type Mode = 'login' | 'register';
 function friendlyAuthError(message: string) {
   const value = message.toLowerCase();
   if (value.includes('invalid login credentials')) return 'E-mail ou senha não conferem.';
+  if (value.includes('email not confirmed')) return 'Confirme seu e-mail antes de entrar.';
   if (value.includes('user already registered')) return 'Este e-mail já possui uma conta. Use Entrar.';
   if (value.includes('password should be at least')) return 'A senha precisa ter pelo menos 6 caracteres.';
   if (value.includes('unable to validate email') || value.includes('invalid email')) return 'Informe um e-mail válido.';
@@ -58,7 +59,13 @@ export default function AccountPage() {
         return;
       }
 
-      const { data, error } = await supabase.auth.signUp({ email: normalizedEmail, password });
+      const redirectTo = `${window.location.origin}/conta?email-confirmado=1`;
+      const { data, error } = await supabase.auth.signUp({
+        email: normalizedEmail,
+        password,
+        options: { emailRedirectTo: redirectTo },
+      });
+
       if (error) {
         setMessage(friendlyAuthError(error.message));
         return;
