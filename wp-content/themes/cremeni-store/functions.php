@@ -14,8 +14,14 @@ function cremeni_store_setup(): void {
 }
 add_action('after_setup_theme','cremeni_store_setup');
 
-function cremeni_store_asset_version(string $relativePath): string { $path=get_template_directory().$relativePath; if(is_file($path)){return(string)filemtime($path);} $theme=wp_get_theme(); return $theme->get('Version')?:'0.6.6'; }
-function cremeni_store_assets(): void { wp_enqueue_style('cremeni-store',get_stylesheet_uri(),[],cremeni_store_asset_version('/style.css')); wp_enqueue_style('cremeni-store-components',get_template_directory_uri().'/assets/css/components.css',['cremeni-store'],cremeni_store_asset_version('/assets/css/components.css')); wp_enqueue_style('cremeni-store-catalog',get_template_directory_uri().'/assets/css/catalog.css',['cremeni-store','cremeni-store-components'],cremeni_store_asset_version('/assets/css/catalog.css')); wp_enqueue_script('cremeni-store-navigation',get_template_directory_uri().'/assets/js/navigation.js',[],cremeni_store_asset_version('/assets/js/navigation.js'),true); }
+function cremeni_store_asset_version(string $relativePath): string { $path=get_template_directory().$relativePath; if(is_file($path)){return(string)filemtime($path);} $theme=wp_get_theme(); return $theme->get('Version')?:'0.7.0'; }
+function cremeni_store_assets(): void {
+    wp_enqueue_style('cremeni-store',get_stylesheet_uri(),[],cremeni_store_asset_version('/style.css'));
+    wp_enqueue_style('cremeni-store-components',get_template_directory_uri().'/assets/css/components.css',['cremeni-store'],cremeni_store_asset_version('/assets/css/components.css'));
+    wp_enqueue_style('cremeni-store-catalog',get_template_directory_uri().'/assets/css/catalog.css',['cremeni-store','cremeni-store-components'],cremeni_store_asset_version('/assets/css/catalog.css'));
+    wp_enqueue_style('cremeni-store-premium',get_template_directory_uri().'/assets/css/premium.css',['cremeni-store-catalog'],cremeni_store_asset_version('/assets/css/premium.css'));
+    wp_enqueue_script('cremeni-store-navigation',get_template_directory_uri().'/assets/js/navigation.js',[],cremeni_store_asset_version('/assets/js/navigation.js'),true);
+}
 add_action('wp_enqueue_scripts','cremeni_store_assets');
 function cremeni_store_brand_icons(): void { $url=get_template_directory_uri().'/assets/images/cremeni-store-mark.svg'; echo '<link rel="icon" href="'.esc_url($url).'" type="image/svg+xml">'."\n"; }
 add_action('wp_head','cremeni_store_brand_icons',2); add_action('admin_head','cremeni_store_brand_icons',2);

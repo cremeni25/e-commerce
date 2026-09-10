@@ -1,43 +1,90 @@
 <?php
-/** Página inicial CREMENI. @package CremeniStore */
+/** Home premium CREMENI. @package CremeniStore */
 if (! defined('ABSPATH')) { exit; }
-$categories = cremeni_store_product_categories();
 $sports = cremeni_store_sports();
 $shop_url = cremeni_store_catalog_url();
 get_header();
 ?>
-<main id="conteudo">
-<section class="hero hero--brand-first">
-  <div class="cremeni-container hero__grid">
-    <div class="hero__content">
-      <p class="eyebrow"><?php esc_html_e('ESPORTE • BEM-ESTAR • CONEXÃO', 'cremeni-store'); ?></p>
-      <h1><?php esc_html_e('Viva em movimento.', 'cremeni-store'); ?></h1>
-      <p class="hero__lead"><?php esc_html_e('Esporte para você. Cuidado para quem caminha ao seu lado. Conteúdo para uma rotina melhor.', 'cremeni-store'); ?></p>
-      <div class="hero__actions">
-        <a class="button button--primary" href="#universos-cremeni"><?php esc_html_e('Explorar CREMENI', 'cremeni-store'); ?></a>
-        <a class="button button--secondary" href="#esportes"><?php esc_html_e('Ver esportes', 'cremeni-store'); ?></a>
+<main id="conteudo" class="cremeni-home">
+<section class="home-hero">
+  <div class="cremeni-container home-hero__grid">
+    <div class="home-hero__copy">
+      <span class="home-kicker"><?php esc_html_e('CURADORIA PARA UMA VIDA EM MOVIMENTO', 'cremeni-store'); ?></span>
+      <h1><?php esc_html_e('Mais do que comprar. Escolher melhor.', 'cremeni-store'); ?></h1>
+      <p><?php esc_html_e('Esporte, bem-estar, cuidado com quem está ao seu lado e conteúdo útil reunidos em uma experiência CREMENI.', 'cremeni-store'); ?></p>
+      <div class="home-hero__actions">
+        <a class="button button--primary" href="<?php echo esc_url($shop_url); ?>"><?php esc_html_e('Entrar na loja', 'cremeni-store'); ?></a>
+        <a class="button button--ghost" href="#descobrir"><?php esc_html_e('Descobrir por interesse', 'cremeni-store'); ?></a>
       </div>
-      <ul class="hero__proof"><li><?php esc_html_e('Curadoria criteriosa', 'cremeni-store'); ?></li><li><?php esc_html_e('Parceiros nacionais', 'cremeni-store'); ?></li><li><?php esc_html_e('Conteúdo próprio', 'cremeni-store'); ?></li></ul>
+      <div class="home-hero__signals">
+        <span><b>01</b><?php esc_html_e('Produtos selecionados', 'cremeni-store'); ?></span>
+        <span><b>02</b><?php esc_html_e('Operação nacional', 'cremeni-store'); ?></span>
+        <span><b>03</b><?php esc_html_e('Conteúdo próprio', 'cremeni-store'); ?></span>
+      </div>
     </div>
-    <div class="hero__visual" aria-hidden="true"><div class="hero__brand-panel"><?php require get_template_directory() . '/assets/cremeni-wordmark.php'; ?><span><?php esc_html_e('CORPO • MENTE • PET', 'cremeni-store'); ?></span></div></div>
+    <div class="home-hero__brand">
+      <div class="home-hero__brand-inner">
+        <?php require get_template_directory() . '/assets/cremeni-wordmark.php'; ?>
+        <p><?php esc_html_e('bom a qualquer hora', 'cremeni-store'); ?></p>
+        <span><?php esc_html_e('ESPORTE • PET • CONTEÚDO', 'cremeni-store'); ?></span>
+      </div>
+    </div>
   </div>
 </section>
 
-<section class="trust-strip"><div class="cremeni-container trust-strip__grid">
-<div><strong><?php esc_html_e('Esporte', 'cremeni-store'); ?></strong><span><?php esc_html_e('Produtos escolhidos por função, qualidade e competitividade.', 'cremeni-store'); ?></span></div>
-<div><strong><?php esc_html_e('Pet Mimos', 'cremeni-store'); ?></strong><span><?php esc_html_e('Pequenos cuidados que acompanham uma vida ativa.', 'cremeni-store'); ?></span></div>
-<div><strong><?php esc_html_e('Guias CREMENI', 'cremeni-store'); ?></strong><span><?php esc_html_e('Conteúdo útil para corpo, mente, rotina e convivência.', 'cremeni-store'); ?></span></div>
-</div></section>
+<section id="descobrir" class="discover-strip">
+  <div class="cremeni-container">
+    <div class="section-intro section-intro--row">
+      <div><span class="home-kicker"><?php esc_html_e('COMO VOCÊ QUER VIVER HOJE?', 'cremeni-store'); ?></span><h2><?php esc_html_e('Escolha pelo momento, não pela prateleira.', 'cremeni-store'); ?></h2></div>
+      <p><?php esc_html_e('A CREMENI organiza produtos e conteúdo pela intenção de uso. Menos catálogo genérico. Mais contexto.', 'cremeni-store'); ?></p>
+    </div>
+    <div class="intent-grid">
+      <a class="intent-card intent-card--sport" href="<?php echo esc_url(cremeni_store_product_category_url('esporte')); ?>"><span>01</span><strong><?php esc_html_e('Quero me movimentar', 'cremeni-store'); ?></strong><small><?php esc_html_e('Treino, prática esportiva e rotina ativa.', 'cremeni-store'); ?></small><em><?php esc_html_e('Explorar esporte', 'cremeni-store'); ?> →</em></a>
+      <a class="intent-card intent-card--pet" href="<?php echo esc_url(cremeni_store_product_category_url('pet-mimos')); ?>"><span>02</span><strong><?php esc_html_e('Quero cuidar de quem está comigo', 'cremeni-store'); ?></strong><small><?php esc_html_e('Mimos, passeio e convivência.', 'cremeni-store'); ?></small><em><?php esc_html_e('Explorar Pet Mimos', 'cremeni-store'); ?> →</em></a>
+      <a class="intent-card intent-card--guide" href="<?php echo esc_url(cremeni_store_page_url('guias-cremeni')); ?>"><span>03</span><strong><?php esc_html_e('Quero aprender algo útil', 'cremeni-store'); ?></strong><small><?php esc_html_e('Guias curtos para corpo, mente e rotina.', 'cremeni-store'); ?></small><em><?php esc_html_e('Abrir Guias CREMENI', 'cremeni-store'); ?> →</em></a>
+    </div>
+  </div>
+</section>
 
-<section id="universos-cremeni" class="store-categories"><div class="cremeni-container">
-<div class="section-heading section-heading--split"><div><p class="eyebrow"><?php esc_html_e('UNIVERSOS CREMENI', 'cremeni-store'); ?></p><h2><?php esc_html_e('Escolha como a CREMENI entra na sua rotina.', 'cremeni-store'); ?></h2></div><a class="text-link" href="<?php echo esc_url($shop_url); ?>"><?php esc_html_e('Ver catálogo', 'cremeni-store'); ?></a></div>
-<div class="store-categories__grid"><?php $index=1; foreach ($categories as $slug=>$category) : $url = 'guias-cremeni' === $slug ? cremeni_store_page_url('guias-cremeni') : cremeni_store_product_category_url($slug); ?><a class="category-card" href="<?php echo esc_url($url); ?>"><span class="category-card__index"><?php echo esc_html(str_pad((string)$index,2,'0',STR_PAD_LEFT)); ?></span><h3><?php echo esc_html($category['label']); ?></h3><p><?php echo esc_html($category['description']); ?></p><span class="category-card__action"><?php esc_html_e('Conhecer', 'cremeni-store'); ?></span></a><?php $index++; endforeach; ?></div>
-</div></section>
+<?php if (class_exists('WooCommerce')) : ?>
+<section class="home-products">
+  <div class="cremeni-container">
+    <div class="section-intro section-intro--row">
+      <div><span class="home-kicker"><?php esc_html_e('SELEÇÃO CREMENI', 'cremeni-store'); ?></span><h2><?php esc_html_e('Poucos produtos. Bons motivos para estarem aqui.', 'cremeni-store'); ?></h2></div>
+      <a class="section-link" href="<?php echo esc_url($shop_url); ?>"><?php esc_html_e('Ver loja completa', 'cremeni-store'); ?> →</a>
+    </div>
+    <div class="home-products__rail"><?php echo do_shortcode('[products limit="4" columns="4" category="esporte" orderby="date" order="DESC"]'); ?></div>
+    <p class="home-products__note"><?php esc_html_e('A venda só é liberada quando fornecedor, estoque, custo, preço e condição operacional estiverem validados.', 'cremeni-store'); ?></p>
+  </div>
+</section>
+<?php endif; ?>
 
-<section id="esportes" class="sports-section"><div class="cremeni-container"><div class="section-heading"><p class="eyebrow"><?php esc_html_e('CREMENI ESPORTE', 'cremeni-store'); ?></p><h2><?php esc_html_e('Seu esporte. Sua rotina.', 'cremeni-store'); ?></h2><p><?php esc_html_e('Uma seleção objetiva por modalidade, sem catálogo inflado e sem produto sem função.', 'cremeni-store'); ?></p></div><div class="sports-grid"><?php foreach($sports as $slug=>$sport): ?><a class="sport-card" href="<?php echo esc_url(cremeni_store_product_category_url($slug)); ?>"><span class="sport-card__mark"><?php echo esc_html(cremeni_store_initial($sport)); ?></span><strong><?php echo esc_html($sport); ?></strong></a><?php endforeach; ?></div></div></section>
+<section class="home-sports" id="esportes">
+  <div class="cremeni-container">
+    <div class="section-intro section-intro--row">
+      <div><span class="home-kicker"><?php esc_html_e('CREMENI ESPORTE', 'cremeni-store'); ?></span><h2><?php esc_html_e('Sua modalidade sem ruído.', 'cremeni-store'); ?></h2></div>
+      <p><?php esc_html_e('Entre direto no universo que faz sentido para você.', 'cremeni-store'); ?></p>
+    </div>
+    <div class="sport-chips"><?php foreach ($sports as $slug => $sport) : ?><a href="<?php echo esc_url(cremeni_store_product_category_url($slug)); ?>"><span><?php echo esc_html(cremeni_store_initial($sport)); ?></span><?php echo esc_html($sport); ?></a><?php endforeach; ?></div>
+  </div>
+</section>
 
-<?php if(class_exists('WooCommerce')): ?><section class="featured-products" id="selecao-cremeni"><div class="cremeni-container"><div class="section-heading section-heading--split"><div><p class="eyebrow"><?php esc_html_e('CATÁLOGO PILOTO REAL','cremeni-store'); ?></p><h2><?php esc_html_e('Primeira seleção CREMENI Esporte.','cremeni-store'); ?></h2><p><?php esc_html_e('Produtos reais com fornecedor e estoque validados. A venda permanece bloqueada até a ativação operacional da condição de dropshipping.','cremeni-store'); ?></p></div><a class="text-link" href="<?php echo esc_url(cremeni_store_product_category_url('esporte')); ?>"><?php esc_html_e('Ver CREMENI Esporte','cremeni-store'); ?></a></div><?php echo do_shortcode('[products limit="4" columns="4" category="esporte" orderby="date" order="DESC"]'); ?></div></section><?php endif; ?>
+<section class="home-editorial">
+  <div class="cremeni-container home-editorial__grid">
+    <div class="home-editorial__lead">
+      <span class="home-kicker"><?php esc_html_e('GUIAS CREMENI', 'cremeni-store'); ?></span>
+      <h2><?php esc_html_e('A compra termina. A relação continua.', 'cremeni-store'); ?></h2>
+      <p><?php esc_html_e('Conteúdo próprio para ajudar a transformar produto em uso, uso em hábito e hábito em qualidade de vida.', 'cremeni-store'); ?></p>
+      <a class="button button--yellow" href="<?php echo esc_url(cremeni_store_page_url('guias-cremeni')); ?>"><?php esc_html_e('Conhecer os guias', 'cremeni-store'); ?></a>
+    </div>
+    <div class="home-editorial__cards">
+      <article><span><?php esc_html_e('CORPO', 'cremeni-store'); ?></span><strong><?php esc_html_e('Movimento, mobilidade e recuperação.', 'cremeni-store'); ?></strong></article>
+      <article><span><?php esc_html_e('MENTE', 'cremeni-store'); ?></span><strong><?php esc_html_e('Foco, disciplina e rotina.', 'cremeni-store'); ?></strong></article>
+      <article><span><?php esc_html_e('JUNTOS', 'cremeni-store'); ?></span><strong><?php esc_html_e('Vida ativa com quem faz parte da sua história.', 'cremeni-store'); ?></strong></article>
+    </div>
+  </div>
+</section>
 
-<section class="brand-story"><div class="cremeni-container brand-story__grid"><div><p class="eyebrow"><?php esc_html_e('GUIAS CREMENI','cremeni-store'); ?></p><h2><?php esc_html_e('Conteúdo que continua depois da compra.','cremeni-store'); ?></h2></div><div><p><?php esc_html_e('Guias curtos e úteis conectam movimento, hábitos, bem-estar e convivência para manter a CREMENI presente na rotina.','cremeni-store'); ?></p><a class="text-link" href="<?php echo esc_url(cremeni_store_page_url('guias-cremeni')); ?>"><?php esc_html_e('Conhecer os Guias','cremeni-store'); ?></a></div></div></section>
+<section class="home-principles"><div class="cremeni-container home-principles__grid"><strong><?php esc_html_e('Por que comprar na CREMENI?', 'cremeni-store'); ?></strong><span><?php esc_html_e('Curadoria antes de volume', 'cremeni-store'); ?></span><span><?php esc_html_e('Preço antes de impulso', 'cremeni-store'); ?></span><span><?php esc_html_e('Conteúdo antes de abandono', 'cremeni-store'); ?></span><span><?php esc_html_e('Relacionamento depois da compra', 'cremeni-store'); ?></span></div></section>
 </main>
 <?php get_footer();
