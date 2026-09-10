@@ -1,9 +1,12 @@
 import Link from 'next/link';
-import { products } from '@/lib/catalog';
+import { formatPrice, getProducts } from '@/lib/catalog';
 
 const logoUrl = 'https://raw.githubusercontent.com/cremeni25/e-commerce/main/wp-content/themes/cremeni-store/assets/images/cremeni-official-wordmark.svg';
 
-export default function HomePage() {
+export default async function HomePage() {
+  const products = await getProducts();
+  const selectedProducts = products.slice(0, 4);
+
   return (
     <main>
       <header className="topbar">
@@ -50,10 +53,10 @@ export default function HomePage() {
       <section id="selecionados" className="productSection shell">
         <div className="sectionHead split"><div><span className="kicker">SELEÇÃO CREMENI</span><h2>Um catálogo menor. Mais critério em cada escolha.</h2></div><Link href="/loja">Ver toda a loja →</Link></div>
         <div className="productGrid">
-          {products.map((product) => (
-            <article className="productCard" key={product.slug}>
-              <Link href={`/produto/${product.slug}`} className="productMedia"><span>{product.modality}</span><div>Imagem em homologação</div></Link>
-              <div className="productBody"><small>{product.supplier}</small><h3><Link href={`/produto/${product.slug}`}>{product.name}</Link></h3><p>{product.personalization}</p><div className="productFooter"><strong>Preço em validação</strong><Link href={`/produto/${product.slug}`}>Conhecer →</Link></div></div>
+          {selectedProducts.map((product) => (
+            <article className="productCard" key={product.id}>
+              <Link href={`/produto/${product.slug}`} className="productMedia"><span>{product.modality}</span>{product.imageUrl ? <img src={product.imageUrl} alt={product.name} /> : <div>Imagem em homologação</div>}</Link>
+              <div className="productBody"><small>{product.supplier}</small><h3><Link href={`/produto/${product.slug}`}>{product.name}</Link></h3><p>{product.personalization}</p><div className="productFooter"><strong>{formatPrice(product.priceCents, product.currency)}</strong><Link href={`/produto/${product.slug}`}>Conhecer →</Link></div></div>
             </article>
           ))}
         </div>
