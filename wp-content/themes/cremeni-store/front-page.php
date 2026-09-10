@@ -22,13 +22,16 @@ get_header();
         <span><b>03</b><?php esc_html_e('Conteúdo próprio', 'cremeni-store'); ?></span>
       </div>
     </div>
-    <div class="home-hero__brand">
-      <div class="home-hero__brand-inner">
-        <?php require get_template_directory() . '/assets/cremeni-wordmark.php'; ?>
-        <p><?php esc_html_e('bom a qualquer hora', 'cremeni-store'); ?></p>
-        <span><?php esc_html_e('ESPORTE • PET • CONTEÚDO', 'cremeni-store'); ?></span>
-      </div>
-    </div>
+    <aside class="home-hero__commerce" aria-label="<?php esc_attr_e('Acessos rápidos CREMENI', 'cremeni-store'); ?>">
+      <div class="home-hero__commerce-brand"><?php require get_template_directory() . '/assets/cremeni-wordmark.php'; ?></div>
+      <span class="home-kicker"><?php esc_html_e('ENCONTRE SEU CAMINHO', 'cremeni-store'); ?></span>
+      <h2><?php esc_html_e('O que você procura hoje?', 'cremeni-store'); ?></h2>
+      <nav class="home-hero__quicklinks">
+        <a href="<?php echo esc_url(cremeni_store_product_category_url('esporte')); ?>"><strong><?php esc_html_e('Esporte', 'cremeni-store'); ?></strong><span><?php esc_html_e('Treino e modalidades', 'cremeni-store'); ?></span><b>→</b></a>
+        <a href="<?php echo esc_url(cremeni_store_product_category_url('pet-mimos')); ?>"><strong><?php esc_html_e('Pet Mimos', 'cremeni-store'); ?></strong><span><?php esc_html_e('Cuidado e convivência', 'cremeni-store'); ?></span><b>→</b></a>
+        <a href="<?php echo esc_url(cremeni_store_page_url('guias-cremeni')); ?>"><strong><?php esc_html_e('Guias CREMENI', 'cremeni-store'); ?></strong><span><?php esc_html_e('Conteúdo e rotina', 'cremeni-store'); ?></span><b>→</b></a>
+      </nav>
+    </aside>
   </div>
 </section>
 
