@@ -5,9 +5,11 @@ if (! defined('ABSPATH')) { exit; }
 <footer class="site-footer">
     <div class="cremeni-container site-footer__grid">
         <section class="site-footer__brand">
-            <?php require get_template_directory() . '/assets/cremeni-wordmark.php'; ?>
-            <p class="site-footer__tagline"><?php esc_html_e('bom a qualquer hora', 'cremeni-store'); ?></p>
-            <p><?php esc_html_e('Esporte, Pet Mimos e Guias CREMENI reunidos em uma experiência de compra, cuidado e conteúdo para uma vida mais ativa.', 'cremeni-store'); ?></p>
+            <div class="site-footer__official-lockup" aria-label="CREMENI — bom a qualquer hora">
+                <?php require get_template_directory() . '/assets/cremeni-wordmark.php'; ?>
+                <p class="site-footer__tagline">“<?php esc_html_e('bom a qualquer hora', 'cremeni-store'); ?>”</p>
+            </div>
+            <p class="site-footer__brand-copy"><?php esc_html_e('Esporte, Pet Mimos e Guias CREMENI reunidos em uma experiência de compra, cuidado e conteúdo para uma vida mais ativa.', 'cremeni-store'); ?></p>
         </section>
 
         <section>
