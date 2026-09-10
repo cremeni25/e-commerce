@@ -35,13 +35,10 @@ type ProductRow = {
   metadata: Record<string, unknown> | null;
 };
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://gstyqhboowperthyfrit.supabase.co';
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'sb_publishable_nWKCmzMYDowkEvLPRYbVxw_7hbBT3Wp';
 
 function headers() {
-  if (!supabaseUrl || !supabaseKey) {
-    throw new Error('Catálogo CREMENI não configurado: Supabase ausente.');
-  }
   return { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` };
 }
 
