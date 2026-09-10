@@ -1,0 +1,1 @@
+Diagnóstico técnico temporário da Loja CREMENI.
