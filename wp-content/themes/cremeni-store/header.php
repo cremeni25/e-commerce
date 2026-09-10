@@ -44,3 +44,10 @@ if (! defined('ABSPATH')) { exit; }
         </div>
     </div>
 </header>
+<?php if (! is_front_page()) : ?>
+<div class="cremeni-backbar">
+    <div class="cremeni-container">
+        <a href="<?php echo esc_url(home_url('/')); ?>" onclick="if (window.history.length > 1) { window.history.back(); return false; }">← <?php esc_html_e('Voltar', 'cremeni-store'); ?></a>
+    </div>
+</div>
+<?php endif; ?>
