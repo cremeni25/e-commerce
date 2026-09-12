@@ -38,7 +38,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
         </section>
       )}
 
-      <section className="guideContents" aria-label="Índice do guia">
+      <section className="guideContents" id="indice-topo" aria-label="Índice do guia">
         <div>
           <span className="kicker">ÍNDICE</span>
           <h2>12 páginas para construir uma rotina possível.</h2>
@@ -72,8 +72,6 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
           </article>
         ))}
       </section>
-
-      <div id="indice-topo" aria-hidden="true" />
 
       {guide.slug === 'caminhar-juntos' && <GuideTracker guideSlug={guide.slug} />}
 
