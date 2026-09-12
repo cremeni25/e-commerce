@@ -12,10 +12,10 @@ type Address = {
   street: string;
   number: string;
   complement: string | null;
-  neighborhood: string;
+  district: string;
   city: string;
   state: string;
-  country_code: string;
+  country: string;
   is_default: boolean;
 };
 
@@ -25,11 +25,25 @@ type CartItem = {
   products: {
     name: string;
     sku: string;
-    weight_grams: number | null;
-    length_cm: number | null;
-    width_cm: number | null;
-    height_cm: number | null;
   } | null;
+};
+
+type ShippingReadiness = {
+  ready: boolean;
+  items: number;
+  missing_inventory: number;
+  missing_dimensions: number;
+  missing_origin: number;
+  reason: string;
+};
+
+type ShippingQuote = {
+  quote_id: string;
+  provider: string;
+  service_name: string;
+  amount_cents: number;
+  estimated_days: number | null;
+  expires_at: string;
 };
 
 const emptyForm = {
@@ -43,16 +57,34 @@ const emptyForm = {
   state: '',
 };
 
+function money(cents: number) {
+  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(cents / 100);
+}
+
+function readinessMessage(readiness: ShippingReadiness | null) {
+  if (!readiness) return 'Verificando dados logísticos…';
+  if (readiness.reason === 'cart_empty' || readiness.reason === 'cart_not_found') return 'O carrinho está vazio.';
+  if (readiness.missing_inventory > 0) return 'Estoque real ainda não foi validado para todos os itens.';
+  if (readiness.missing_dimensions > 0) return 'Peso e dimensões reais ainda não foram validados para todos os itens.';
+  if (readiness.missing_origin > 0) return 'A origem logística do fornecedor ainda não foi configurada para todos os itens.';
+  return readiness.ready ? 'Dados logísticos validados. A cotação pode ser consultada.' : 'Frete ainda não está liberado.';
+}
+
 export default function CheckoutPage() {
   const [userId, setUserId] = useState<string | null>(null);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
   const [items, setItems] = useState<CartItem[]>([]);
+  const [readiness, setReadiness] = useState<ShippingReadiness | null>(null);
+  const [quote, setQuote] = useState<ShippingQuote | null>(null);
   const [form, setForm] = useState(emptyForm);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [quoting, setQuoting] = useState(false);
+  const [creatingOrder, setCreatingOrder] = useState(false);
+  const [orderId, setOrderId] = useState<string | null>(null);
 
   useEffect(() => {
     void loadCheckout();
@@ -60,6 +92,7 @@ export default function CheckoutPage() {
 
   async function loadCheckout() {
     setLoading(true);
+    setQuote(null);
     const { data: auth } = await supabase.auth.getUser();
     const user = auth.user;
     setUserId(user?.id || null);
@@ -70,10 +103,10 @@ export default function CheckoutPage() {
       return;
     }
 
-    const [{ data: addressData }, { data: carts }] = await Promise.all([
+    const [{ data: addressData }, { data: carts }, { data: readinessData }] = await Promise.all([
       supabase
         .from('customer_addresses')
-        .select('id,label,recipient_name,postal_code,street,number,complement,neighborhood,city,state,country_code,is_default')
+        .select('id,label,recipient_name,postal_code,street,number,complement,district,city,state,country,is_default')
         .eq('customer_id', user.id)
         .order('is_default', { ascending: false })
         .order('created_at', { ascending: false }),
@@ -84,17 +117,19 @@ export default function CheckoutPage() {
         .eq('status', 'open')
         .order('created_at', { ascending: false })
         .limit(1),
+      supabase.rpc('checkout_shipping_readiness'),
     ]);
 
     const normalizedAddresses = (addressData || []) as Address[];
     setAddresses(normalizedAddresses);
-    setSelectedAddressId(normalizedAddresses[0]?.id || null);
+    setSelectedAddressId((current) => current && normalizedAddresses.some((a) => a.id === current) ? current : normalizedAddresses[0]?.id || null);
+    setReadiness((readinessData || null) as ShippingReadiness | null);
 
     const cartId = carts?.[0]?.id;
     if (cartId) {
       const { data: cartItems } = await supabase
         .from('cart_items')
-        .select('quantity,unit_price_cents,products(name,sku,weight_grams,length_cm,width_cm,height_cm)')
+        .select('quantity,unit_price_cents,products(name,sku)')
         .eq('cart_id', cartId);
       setItems((cartItems || []) as unknown as CartItem[]);
     } else {
@@ -109,10 +144,8 @@ export default function CheckoutPage() {
     [items]
   );
 
-  const logisticsReady = items.length > 0 && items.every((item) => {
-    const p = item.products;
-    return Boolean(p?.weight_grams && p?.length_cm && p?.width_cm && p?.height_cm);
-  });
+  const total = subtotal + (quote?.amount_cents || 0);
+  const selectedAddress = addresses.find((address) => address.id === selectedAddressId) || null;
 
   function updateField(field: keyof typeof emptyForm, value: string) {
     setForm((current) => ({ ...current, [field]: value }));
@@ -178,9 +211,67 @@ export default function CheckoutPage() {
     }
 
     setForm(emptyForm);
-    setMessage('Endereço salvo.');
+    setMessage('Endereço salvo com segurança.');
     setSaving(false);
     await loadCheckout();
+  }
+
+  async function calculateShipping() {
+    if (!selectedAddressId || !readiness?.ready) return;
+    setQuoting(true);
+    setMessage('Consultando frete real…');
+    setQuote(null);
+
+    const { data, error } = await supabase.functions.invoke('shipping-quote', {
+      body: { address_id: selectedAddressId },
+    });
+
+    if (error || !data) {
+      const context = (error as { context?: Response } | null)?.context;
+      let code = '';
+      if (context) {
+        try {
+          const payload = await context.clone().json();
+          code = payload?.error || '';
+        } catch {
+          code = '';
+        }
+      }
+      if (code === 'logistics_provider_not_configured') {
+        setMessage('A integração logística está pronta, mas o token de homologação do Melhor Envio ainda não foi conectado.');
+      } else {
+        setMessage('A cotação real não pôde ser concluída. Nenhum valor fictício foi aplicado.');
+      }
+      setQuoting(false);
+      return;
+    }
+
+    setQuote(data as ShippingQuote);
+    setMessage('Frete cotado em tempo real.');
+    setQuoting(false);
+  }
+
+  async function createOrder() {
+    if (!quote || !selectedAddress || !userEmail) return;
+    setCreatingOrder(true);
+    setMessage('Revalidando preço, estoque e frete…');
+
+    const { data, error } = await supabase.rpc('create_checkout_order', {
+      p_customer_name: selectedAddress.recipient_name,
+      p_customer_email: userEmail,
+      p_address_id: selectedAddress.id,
+      p_shipping_quote_id: quote.quote_id,
+    });
+
+    if (error || !data) {
+      setMessage('O pedido não foi criado porque uma validação de preço, estoque ou frete falhou.');
+      setCreatingOrder(false);
+      return;
+    }
+
+    setOrderId(String(data));
+    setMessage('Pedido criado com pagamento pendente. Nenhum gateway foi acionado.');
+    setCreatingOrder(false);
   }
 
   if (loading) {
@@ -206,7 +297,7 @@ export default function CheckoutPage() {
       <header className="storeHero">
         <span className="kicker">ENTREGA</span>
         <h1>Checkout</h1>
-        <p>Primeiro confirmamos o endereço. Depois o frete será cotado com dados logísticos reais.</p>
+        <p>Endereço, origem do fornecedor, preço, estoque e frete são validados antes do pedido.</p>
       </header>
 
       <div className="checkoutGrid">
@@ -221,12 +312,15 @@ export default function CheckoutPage() {
                     type="radio"
                     name="delivery-address"
                     checked={selectedAddressId === address.id}
-                    onChange={() => setSelectedAddressId(address.id)}
+                    onChange={() => {
+                      setSelectedAddressId(address.id);
+                      setQuote(null);
+                    }}
                   />
                   <span>
                     <strong>{address.recipient_name}</strong>
                     <small>{address.street}, {address.number}{address.complement ? ` · ${address.complement}` : ''}</small>
-                    <small>{address.neighborhood} · {address.city}/{address.state} · CEP {address.postal_code}</small>
+                    <small>{address.district} · {address.city}/{address.state} · CEP {address.postal_code}</small>
                   </span>
                 </label>
               ))}
@@ -234,7 +328,7 @@ export default function CheckoutPage() {
           )}
 
           <form className="accountForm" onSubmit={saveAddress}>
-            <h3>{addresses.length ? 'Atualizar endereço principal' : 'Cadastrar endereço'}</h3>
+            <h3>{addresses.length ? 'Cadastrar novo endereço principal' : 'Cadastrar endereço'}</h3>
             <label>Nome do destinatário<input required value={form.recipient_name} onChange={(e) => updateField('recipient_name', e.target.value)} /></label>
             <label>CEP
               <div className="inlineField">
@@ -254,16 +348,39 @@ export default function CheckoutPage() {
 
         <aside className="checkoutCard checkoutSummary">
           <h2>Resumo</h2>
-          <div><span>Subtotal</span><strong>{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(subtotal / 100)}</strong></div>
-          <div><span>Frete</span><strong>{logisticsReady ? 'Pronto para cotação' : 'Aguardando dados do fornecedor'}</strong></div>
-          <p className="checkoutNotice">
-            {logisticsReady
-              ? 'Os itens possuem peso e dimensões cadastrados. A próxima etapa é consultar um provedor logístico real.'
-              : 'Nenhum valor de frete fictício será aplicado. Peso e dimensões precisam ser confirmados produto a produto antes da cotação.'}
-          </p>
-          <button className="primary" type="button" disabled={!selectedAddressId || !logisticsReady}>Calcular frete</button>
-          <button className="primary" type="button" disabled>Continuar para pagamento</button>
-          <small>Pagamento real permanece desabilitado até estoque e frete estarem homologados.</small>
+          <div><span>Subtotal</span><strong>{money(subtotal)}</strong></div>
+          <div><span>Frete</span><strong>{quote ? money(quote.amount_cents) : 'A calcular'}</strong></div>
+          <div><span>Total</span><strong>{quote ? money(total) : 'A confirmar'}</strong></div>
+
+          <p className="checkoutNotice">{readinessMessage(readiness)}</p>
+
+          {quote && (
+            <p className="checkoutNotice">
+              <strong>{quote.service_name}</strong><br />
+              {quote.estimated_days != null ? `Prazo estimado: até ${quote.estimated_days} dia(s).` : 'Prazo informado pela transportadora no momento da cotação.'}
+            </p>
+          )}
+
+          <button
+            className="primary"
+            type="button"
+            disabled={!selectedAddressId || !readiness?.ready || quoting || Boolean(orderId)}
+            onClick={calculateShipping}
+          >
+            {quoting ? 'Cotando…' : quote ? 'Recalcular frete' : 'Calcular frete real'}
+          </button>
+
+          <button
+            className="primary"
+            type="button"
+            disabled={!quote || creatingOrder || Boolean(orderId)}
+            onClick={createOrder}
+          >
+            {creatingOrder ? 'Validando…' : orderId ? 'Pedido criado' : 'Confirmar pedido sem pagamento'}
+          </button>
+
+          <small>Pagamento real permanece desabilitado. O pedido, quando liberado, nasce com payment_status = pending.</small>
+          {orderId && <small>Pedido homologado: {orderId}</small>}
         </aside>
       </div>
 
