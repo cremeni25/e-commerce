@@ -14,8 +14,12 @@ export type Product = {
   isPersonalizable: boolean;
   personalization: string;
   supplier: string;
+  supplierStatus: string;
   imageUrl: string | null;
+  imageStatus: string;
+  priceStatus: string;
   availabilityStatus: string;
+  dropshippingEligible: boolean;
 };
 
 type ProductRow = {
@@ -59,9 +63,13 @@ function mapProduct(row: ProductRow): Product {
     trackInventory: row.track_inventory,
     isPersonalizable: row.is_personalizable,
     personalization: row.personalization_notes || (row.is_personalizable ? 'Personalização disponível' : 'Não se aplica'),
-    supplier: String(metadata.supplier || 'Fornecedor nacional validado'),
+    supplier: String(metadata.supplier || 'Não consolidado'),
+    supplierStatus: String(metadata.supplier_status || 'not_consolidated'),
     imageUrl: row.image_url,
+    imageStatus: String(metadata.image_status || 'not_validated'),
+    priceStatus: String(metadata.price_status || 'not_validated'),
     availabilityStatus: String(metadata.availability_status || 'unknown'),
+    dropshippingEligible: metadata.dropshipping_eligible === true,
   };
 }
 
