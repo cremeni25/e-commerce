@@ -40,8 +40,8 @@ export default async function HomePage() {
         <div className="productGrid">
           {selectedProducts.map((product) => (
             <article className="productCard" key={product.id}>
-              <Link href={`/produto/${product.slug}`} className="productMedia"><span>{product.modality}</span>{product.imageUrl ? <img src={product.imageUrl} alt={product.name} /> : <div>Imagem aguardando autorização do fornecedor</div>}</Link>
-              <div className="productBody"><small>{product.supplier}</small><h3><Link href={`/produto/${product.slug}`}>{product.name}</Link></h3><p>{product.personalization}</p><div className="productFooter"><strong>{formatPrice(product.priceCents, product.currency)}</strong><Link href={`/produto/${product.slug}`}>Conhecer →</Link></div></div>
+              <Link href={`/produto/${product.slug}`} className="productMedia"><span>{product.modality}</span>{product.imageUrl ? <img src={product.imageUrl} alt={product.name} /> : <div>Imagem real pendente de homologação</div>}</Link>
+              <div className="productBody"><small>SELEÇÃO CREMENI · {product.modality}</small><h3><Link href={`/produto/${product.slug}`}>{product.name}</Link></h3><p>{product.personalization}</p><div className="productFooter"><strong>{formatPrice(product.priceCents, product.currency)}</strong><Link href={`/produto/${product.slug}`}>Conhecer →</Link></div></div>
             </article>
           ))}
         </div>
