@@ -1,14 +1,16 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import GuideTracker from '@/components/GuideTracker';
 import type { GuideSection } from '@/lib/guides';
 
 type GuideReaderProps = {
   sections: GuideSection[];
   intro: string;
+  guideSlug: string;
 };
 
-export default function GuideReader({ sections, intro }: GuideReaderProps) {
+export default function GuideReader({ sections, intro, guideSlug }: GuideReaderProps) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const total = sections.length;
 
@@ -21,6 +23,7 @@ export default function GuideReader({ sections, intro }: GuideReaderProps) {
   }, [total]);
 
   function selectPage(index: number) {
+    if (index < 0 || index >= total) return;
     setActiveIndex(index);
     window.history.replaceState(null, '', `#pagina-${index + 1}`);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -53,6 +56,7 @@ export default function GuideReader({ sections, intro }: GuideReaderProps) {
   }
 
   const section = sections[activeIndex];
+  const showTracker = guideSlug === 'caminhar-juntos' && activeIndex === 9;
 
   return (
     <section className="guideSinglePage" aria-live="polite">
@@ -67,6 +71,7 @@ export default function GuideReader({ sections, intro }: GuideReaderProps) {
           <ul>
             {section.items.map((item) => <li key={item}>{item}</li>)}
           </ul>
+          {showTracker && <GuideTracker guideSlug={guideSlug} />}
         </div>
       </article>
 
