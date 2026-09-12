@@ -12,16 +12,24 @@ type Address = {
   street: string;
   number: string;
   complement: string | null;
-  district: string;
+  neighborhood: string;
   city: string;
   state: string;
-  country: string;
+  country_code: string;
   is_default: boolean;
 };
 
 type CartItem = {
   quantity: number;
   unit_price_cents: number;
+  products: {
+    name: string;
+    sku: string;
+    weight_grams: number | null;
+    length_cm: number | null;
+    width_cm: number | null;
+    height_cm: number | null;
+  } | null;
 };
 
 const emptyForm = {
@@ -30,7 +38,7 @@ const emptyForm = {
   street: '',
   number: '',
   complement: '',
-  district: '',
+  neighborhood: '',
   city: '',
   state: '',
 };
@@ -65,7 +73,7 @@ export default function CheckoutPage() {
     const [{ data: addressData }, { data: carts }] = await Promise.all([
       supabase
         .from('customer_addresses')
-        .select('id,label,recipient_name,postal_code,street,number,complement,district,city,state,country,is_default')
+        .select('id,label,recipient_name,postal_code,street,number,complement,neighborhood,city,state,country_code,is_default')
         .eq('customer_id', user.id)
         .order('is_default', { ascending: false })
         .order('created_at', { ascending: false }),
@@ -86,9 +94,9 @@ export default function CheckoutPage() {
     if (cartId) {
       const { data: cartItems } = await supabase
         .from('cart_items')
-        .select('quantity,unit_price_cents')
+        .select('quantity,unit_price_cents,products(name,sku,weight_grams,length_cm,width_cm,height_cm)')
         .eq('cart_id', cartId);
-      setItems((cartItems || []) as CartItem[]);
+      setItems((cartItems || []) as unknown as CartItem[]);
     } else {
       setItems([]);
     }
@@ -101,13 +109,21 @@ export default function CheckoutPage() {
     [items]
   );
 
+  const logisticsReady = items.length > 0 && items.every((item) => {
+    const p = item.products;
+    return Boolean(p?.weight_grams && p?.length_cm && p?.width_cm && p?.height_cm);
+  });
+
   function updateField(field: keyof typeof emptyForm, value: string) {
     setForm((current) => ({ ...current, [field]: value }));
   }
 
   async function lookupPostalCode() {
     const postalCode = form.postal_code.replace(/\D/g, '');
-    if (postalCode.length !== 8) return;
+    if (postalCode.length !== 8) {
+      setMessage('Informe um CEP válido com 8 dígitos.');
+      return;
+    }
 
     setMessage('Consultando CEP…');
     try {
@@ -121,7 +137,7 @@ export default function CheckoutPage() {
         ...current,
         postal_code: postalCode,
         street: data.logradouro || current.street,
-        district: data.bairro || current.district,
+        neighborhood: data.bairro || current.neighborhood,
         city: data.localidade || current.city,
         state: (data.uf || current.state).toUpperCase(),
       }));
@@ -144,23 +160,19 @@ export default function CheckoutPage() {
 
     setSaving(true);
     setMessage('');
-    const { error } = await supabase.from('customer_addresses').insert({
-      customer_id: userId,
-      label: addresses.length ? 'Entrega' : 'Principal',
-      recipient_name: form.recipient_name.trim(),
-      postal_code: postalCode,
-      street: form.street.trim(),
-      number: form.number.trim(),
-      complement: form.complement.trim() || null,
-      district: form.district.trim(),
-      city: form.city.trim(),
-      state,
-      country: 'BR',
-      is_default: addresses.length === 0,
+    const { error } = await supabase.rpc('save_default_address', {
+      p_recipient_name: form.recipient_name,
+      p_postal_code: postalCode,
+      p_street: form.street,
+      p_number: form.number,
+      p_complement: form.complement,
+      p_neighborhood: form.neighborhood,
+      p_city: form.city,
+      p_state: state,
     });
 
     if (error) {
-      setMessage(`Não foi possível salvar o endereço: ${error.message}`);
+      setMessage(error.message.includes('invalid_postal_code') ? 'Informe um CEP válido com 8 dígitos.' : 'Não foi possível salvar o endereço.');
       setSaving(false);
       return;
     }
@@ -194,7 +206,7 @@ export default function CheckoutPage() {
       <header className="storeHero">
         <span className="kicker">ENTREGA</span>
         <h1>Checkout</h1>
-        <p>Primeiro confirmamos o endereço. Depois o frete será cotado por um provedor logístico real.</p>
+        <p>Primeiro confirmamos o endereço. Depois o frete será cotado com dados logísticos reais.</p>
       </header>
 
       <div className="checkoutGrid">
@@ -214,7 +226,7 @@ export default function CheckoutPage() {
                   <span>
                     <strong>{address.recipient_name}</strong>
                     <small>{address.street}, {address.number}{address.complement ? ` · ${address.complement}` : ''}</small>
-                    <small>{address.district} · {address.city}/{address.state} · CEP {address.postal_code}</small>
+                    <small>{address.neighborhood} · {address.city}/{address.state} · CEP {address.postal_code}</small>
                   </span>
                 </label>
               ))}
@@ -222,7 +234,7 @@ export default function CheckoutPage() {
           )}
 
           <form className="accountForm" onSubmit={saveAddress}>
-            <h3>{addresses.length ? 'Adicionar outro endereço' : 'Cadastrar endereço'}</h3>
+            <h3>{addresses.length ? 'Atualizar endereço principal' : 'Cadastrar endereço'}</h3>
             <label>Nome do destinatário<input required value={form.recipient_name} onChange={(e) => updateField('recipient_name', e.target.value)} /></label>
             <label>CEP
               <div className="inlineField">
@@ -233,7 +245,7 @@ export default function CheckoutPage() {
             <label>Rua<input required value={form.street} onChange={(e) => updateField('street', e.target.value)} /></label>
             <label>Número<input required value={form.number} onChange={(e) => updateField('number', e.target.value)} /></label>
             <label>Complemento<input value={form.complement} onChange={(e) => updateField('complement', e.target.value)} /></label>
-            <label>Bairro<input required value={form.district} onChange={(e) => updateField('district', e.target.value)} /></label>
+            <label>Bairro<input required value={form.neighborhood} onChange={(e) => updateField('neighborhood', e.target.value)} /></label>
             <label>Cidade<input required value={form.city} onChange={(e) => updateField('city', e.target.value)} /></label>
             <label>UF<input required maxLength={2} value={form.state} onChange={(e) => updateField('state', e.target.value.toUpperCase())} /></label>
             <button className="secondary" type="submit" disabled={saving}>{saving ? 'Salvando…' : 'Salvar endereço'}</button>
@@ -243,10 +255,15 @@ export default function CheckoutPage() {
         <aside className="checkoutCard checkoutSummary">
           <h2>Resumo</h2>
           <div><span>Subtotal</span><strong>{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(subtotal / 100)}</strong></div>
-          <div><span>Frete</span><strong>A calcular</strong></div>
-          <p className="checkoutNotice">Nenhum valor de frete fictício será aplicado. A criação do pedido fica bloqueada até recebermos uma cotação válida e não expirada de um provedor logístico.</p>
+          <div><span>Frete</span><strong>{logisticsReady ? 'Pronto para cotação' : 'Aguardando dados do fornecedor'}</strong></div>
+          <p className="checkoutNotice">
+            {logisticsReady
+              ? 'Os itens possuem peso e dimensões cadastrados. A próxima etapa é consultar um provedor logístico real.'
+              : 'Nenhum valor de frete fictício será aplicado. Peso e dimensões precisam ser confirmados produto a produto antes da cotação.'}
+          </p>
+          <button className="primary" type="button" disabled={!selectedAddressId || !logisticsReady}>Calcular frete</button>
           <button className="primary" type="button" disabled>Continuar para pagamento</button>
-          <small>Pagamento real permanece desabilitado nesta homologação.</small>
+          <small>Pagamento real permanece desabilitado até estoque e frete estarem homologados.</small>
         </aside>
       </div>
 
