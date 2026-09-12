@@ -1,6 +1,17 @@
 export type GuideSection = {
   title: string;
-  items: string[];
+  lead?: string;
+  paragraphs?: string[];
+  keypoints?: string[];
+  practice?: string;
+  sources?: string[];
+  items?: string[];
+};
+
+export type GuideReference = {
+  organization: string;
+  title: string;
+  url: string;
 };
 
 export type Guide = {
@@ -20,6 +31,7 @@ export type Guide = {
   intro: string;
   sections: GuideSection[];
   safetyNote: string;
+  references: GuideReference[];
 };
 
 type GuideRow = {
@@ -38,6 +50,7 @@ type GuideRow = {
     intro?: string;
     sections?: GuideSection[];
     safety_note?: string;
+    references?: GuideReference[];
   } | null;
   guide_collections: { name: string; slug: string } | null;
 };
@@ -67,6 +80,7 @@ function mapGuide(row: GuideRow): Guide {
     intro: row.body?.intro || '',
     sections: Array.isArray(row.body?.sections) ? row.body!.sections! : [],
     safetyNote: row.body?.safety_note || '',
+    references: Array.isArray(row.body?.references) ? row.body!.references! : [],
   };
 }
 
