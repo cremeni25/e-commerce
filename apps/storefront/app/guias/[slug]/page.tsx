@@ -9,6 +9,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
   if (!guide) notFound();
 
   const isPreview = guide.status === 'preview';
+  const totalPages = guide.sections.length;
 
   return (
     <main className="guidePage shell">
@@ -24,7 +25,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
         </div>
         <aside>
           <strong>{guide.formatLabel}</strong>
-          <span>{guide.estimatedPages ? `${guide.estimatedPages} páginas previstas` : 'Formato em definição'}</span>
+          <span>{totalPages} páginas editoriais disponíveis</span>
           <span>{isPreview ? 'Prévia editorial' : 'Publicado'}</span>
           {guide.reviewRequired && <span>Revisão profissional: {guide.reviewStatus === 'approved' ? 'aprovada' : 'pendente'}</span>}
         </aside>
@@ -33,24 +34,46 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
       {isPreview && (
         <section className="guidePreviewNotice">
           <strong>Prévia editorial em homologação</strong>
-          <p>Esta versão permite validar estrutura, utilidade e experiência. Ela não representa publicação clínica, veterinária ou profissional definitiva.</p>
+          <p>As 12 páginas abaixo já existem como experiência digital. O conteúdo permanece em prévia até a revisão profissional prevista para temas de saúde e bem-estar.</p>
         </section>
       )}
 
-      <section className="guideEditorial">
-        <p className="guideIntro">{guide.intro}</p>
+      <section className="guideContents" aria-label="Índice do guia">
+        <div>
+          <span className="kicker">ÍNDICE</span>
+          <h2>12 páginas para construir uma rotina possível.</h2>
+          <p>{guide.intro}</p>
+        </div>
+        <nav>
+          {guide.sections.map((section, index) => (
+            <a key={`${section.title}-${index}`} href={`#pagina-${index + 1}`}>
+              <span>{String(index + 1).padStart(2, '0')}</span>
+              <strong>{section.title}</strong>
+            </a>
+          ))}
+        </nav>
+      </section>
+
+      <section className="guideEditorial guidePages">
         {guide.sections.map((section, index) => (
-          <article key={`${section.title}-${index}`}>
-            <span>{String(index + 1).padStart(2, '0')}</span>
+          <article id={`pagina-${index + 1}`} key={`${section.title}-${index}`}>
+            <div className="guidePageMarker">
+              <span>PÁGINA</span>
+              <strong>{String(index + 1).padStart(2, '0')}</strong>
+              <small>de {String(totalPages).padStart(2, '0')}</small>
+            </div>
             <div>
               <h2>{section.title}</h2>
               <ul>
                 {section.items.map((item) => <li key={item}>{item}</li>)}
               </ul>
+              <a className="guideBackToIndex" href="#indice-topo">Voltar ao índice ↑</a>
             </div>
           </article>
         ))}
       </section>
+
+      <div id="indice-topo" aria-hidden="true" />
 
       {guide.slug === 'caminhar-juntos' && <GuideTracker guideSlug={guide.slug} />}
 
