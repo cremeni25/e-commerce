@@ -12,14 +12,27 @@ type CartItem = {
   products: { name: string; slug: string; sku: string } | null;
 };
 
+type ShippingQuote = {
+  amount_cents: number;
+  service_name: string;
+  estimated_days: number | null;
+  expires_at: string;
+};
+
+function money(cents: number) {
+  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(cents / 100);
+}
+
 export default function CartPage() {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [quote, setQuote] = useState<ShippingQuote | null>(null);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
 
   async function loadCart() {
     setLoading(true);
+    setQuote(null);
     const { data: auth } = await supabase.auth.getUser();
     const user = auth.user;
     setUserEmail(user?.email || null);
@@ -36,23 +49,36 @@ export default function CartPage() {
     const cartId = carts?.[0]?.id;
     if (!cartId) { setItems([]); setLoading(false); return; }
 
-    const { data, error } = await supabase
-      .from('cart_items')
-      .select('id,quantity,unit_price_cents,product_id,products(name,slug,sku)')
-      .eq('cart_id', cartId)
-      .order('created_at');
+    const [{ data, error }, { data: quoteData }] = await Promise.all([
+      supabase
+        .from('cart_items')
+        .select('id,quantity,unit_price_cents,product_id,products(name,slug,sku)')
+        .eq('cart_id', cartId)
+        .order('created_at'),
+      supabase
+        .from('shipping_quotes')
+        .select('amount_cents,service_name,estimated_days,expires_at')
+        .eq('cart_id', cartId)
+        .eq('customer_id', user.id)
+        .eq('status', 'valid')
+        .gt('expires_at', new Date().toISOString())
+        .order('created_at', { ascending: false })
+        .limit(1),
+    ]);
 
     if (error) setMessage('Não foi possível carregar o carrinho.');
     setItems((data || []) as unknown as CartItem[]);
+    setQuote((quoteData?.[0] || null) as ShippingQuote | null);
     setLoading(false);
   }
 
-  useEffect(() => { loadCart(); }, []);
+  useEffect(() => { void loadCart(); }, []);
 
-  const total = useMemo(
+  const subtotal = useMemo(
     () => items.reduce((sum, item) => sum + item.quantity * item.unit_price_cents, 0),
     [items]
   );
+  const total = subtotal + (quote?.amount_cents || 0);
 
   async function changeQuantity(id: string, quantity: number) {
     const { error } = await supabase.rpc('set_cart_item_quantity', { p_item_id: id, p_quantity: quantity });
@@ -71,7 +97,7 @@ export default function CartPage() {
       <header className="storeHero">
         <span className="kicker">CREMENI</span>
         <h1>Carrinho</h1>
-        <p>Preço e disponibilidade são revalidados antes do pedido. O frete nunca é presumido.</p>
+        <p>Preço, estoque e frete são revalidados antes do pedido. Nenhum valor de entrega é presumido.</p>
       </header>
 
       {!userEmail && !loading && (
@@ -94,19 +120,19 @@ export default function CartPage() {
                 <span>{item.quantity}</span>
                 <button onClick={() => changeQuantity(item.id, item.quantity + 1)}>+</button>
               </div>
-              <strong>{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format((item.quantity * item.unit_price_cents) / 100)}</strong>
+              <strong>{money(item.quantity * item.unit_price_cents)}</strong>
               <button className="textButton" onClick={() => removeItem(item.id)}>Remover</button>
             </article>
           ))}
 
           {items.length > 0 && (
             <div className="cartSummary">
-              <div>
-                <span>Subtotal</span>
-                <strong>{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(total / 100)}</strong>
-              </div>
+              <div><span>Subtotal</span><strong>{money(subtotal)}</strong></div>
+              <div><span>Frete</span><strong>{quote ? money(quote.amount_cents) : 'A calcular'}</strong></div>
+              <div><span>Total</span><strong>{quote ? money(total) : 'A confirmar'}</strong></div>
+              {quote && <small>{quote.service_name}{quote.estimated_days != null ? ` · até ${quote.estimated_days} dia(s)` : ''}</small>}
               <Link className="primary" href="/checkout">Continuar para entrega</Link>
-              <small>Frete e disponibilidade serão validados antes da criação do pedido.</small>
+              <small>O checkout valida endereço, origem do fornecedor, estoque, dimensões e cotação antes de criar qualquer pedido.</small>
             </div>
           )}
         </section>
