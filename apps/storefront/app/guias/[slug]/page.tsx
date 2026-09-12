@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import GuideTracker from '@/components/GuideTracker';
 import GuideReader from '@/components/GuideReader';
 import { getGuideBySlug } from '@/lib/guides';
 
@@ -39,9 +38,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
         </section>
       )}
 
-      <GuideReader sections={guide.sections} intro={guide.intro} />
-
-      {guide.slug === 'caminhar-juntos' && <GuideTracker guideSlug={guide.slug} />}
+      <GuideReader sections={guide.sections} intro={guide.intro} guideSlug={guide.slug} />
 
       {guide.safetyNote && (
         <section className="guideSafety">
