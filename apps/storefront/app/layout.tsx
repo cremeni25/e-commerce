@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import StoreHeader from '@/components/StoreHeader';
 import './globals.css';
 import './header.css';
+import './guides.css';
 
 export const metadata: Metadata = {
   title: 'CREMENI — bom a qualquer hora',
