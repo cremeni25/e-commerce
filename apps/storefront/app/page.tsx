@@ -9,21 +9,6 @@ export default async function HomePage() {
 
   return (
     <main>
-      <header className="topbar">
-        <div className="shell nav">
-          <Link href="/" className="brand" aria-label="CREMENI — início">
-            <img src={logoUrl} alt="CREMENI" />
-          </Link>
-          <nav className="navlinks" aria-label="Navegação principal">
-            <Link href="/loja">Loja</Link>
-            <Link href="/loja?vertical=esporte">Esporte</Link>
-            <Link href="/loja?vertical=pet-mimos">Pet Mimos</Link>
-            <Link href="/guias">Guias</Link>
-          </nav>
-          <div className="actions"><button aria-label="Buscar">⌕</button><Link href="/conta">Conta</Link><Link href="/carrinho" className="cart">Carrinho <span>0</span></Link></div>
-        </div>
-      </header>
-
       <section className="hero shell">
         <div className="heroCopy">
           <span className="kicker">CREMENI • BOM A QUALQUER HORA</span>
@@ -55,7 +40,7 @@ export default async function HomePage() {
         <div className="productGrid">
           {selectedProducts.map((product) => (
             <article className="productCard" key={product.id}>
-              <Link href={`/produto/${product.slug}`} className="productMedia"><span>{product.modality}</span>{product.imageUrl ? <img src={product.imageUrl} alt={product.name} /> : <div>Imagem em homologação</div>}</Link>
+              <Link href={`/produto/${product.slug}`} className="productMedia"><span>{product.modality}</span>{product.imageUrl ? <img src={product.imageUrl} alt={product.name} /> : <div>Imagem aguardando autorização do fornecedor</div>}</Link>
               <div className="productBody"><small>{product.supplier}</small><h3><Link href={`/produto/${product.slug}`}>{product.name}</Link></h3><p>{product.personalization}</p><div className="productFooter"><strong>{formatPrice(product.priceCents, product.currency)}</strong><Link href={`/produto/${product.slug}`}>Conhecer →</Link></div></div>
             </article>
           ))}
