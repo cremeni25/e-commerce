@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { formatPrice, getProductBySlug } from '@/lib/catalog';
 import AddToCart from '@/components/AddToCart';
+import '../product.css';
 
 function operationalLabel(value: string) {
   const labels: Record<string, string> = {
