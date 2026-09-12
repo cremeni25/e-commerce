@@ -1,36 +1,65 @@
 import Link from 'next/link';
+import { getGuides } from '@/lib/guides';
 
-export default function GuidesPage() {
+const collections = [
+  ['CREMENI CORPO', 'Movimento, mobilidade e rotina ativa.'],
+  ['CREMENI MENTE', 'Hábitos, presença e equilíbrio no dia a dia.'],
+  ['CREMENI PET', 'Rotina, enriquecimento e convivência responsável.'],
+  ['CREMENI JUNTOS', 'Experiências que aproximam pessoas, movimento e companhia.'],
+];
+
+export default async function GuidesPage() {
+  const guides = await getGuides();
+
   return (
     <main className="storePage shell">
       <div className="storeBack"><Link href="/">← Voltar</Link></div>
-      <header className="storeHero">
+      <header className="storeHero guideLibraryHero">
         <span className="kicker">GUIAS CREMENI</span>
-        <h1>Conteúdo próprio para continuar útil depois da compra.</h1>
-        <p>Os Guias CREMENI são uma frente proprietária de relacionamento, autoridade, educação e apoio ao catálogo.</p>
+        <h1>Conteúdo próprio para acompanhar escolhas, rotina e bem-estar.</h1>
+        <p>Uma biblioteca editorial conectada à experiência CREMENI: prática, curta, útil e responsável.</p>
       </header>
 
-      <section className="checkoutGrid">
-        <article className="checkoutCard">
-          <span className="kicker">PILOTO DEFINIDO</span>
-          <h2>Guia CREMENI nº 001 — Caminhar Juntos</h2>
-          <p>Conceito: atividade conjunta entre pessoa e pet, conectando movimento, companhia e rotina.</p>
-          <p>O artefato final ainda não foi publicado. Esta página registra apenas a decisão canônica já aprovada.</p>
-        </article>
+      <section className="guideCollections" aria-label="Coleções Guias CREMENI">
+        {collections.map(([name, description]) => (
+          <article key={name}>
+            <strong>{name}</strong>
+            <p>{description}</p>
+          </article>
+        ))}
+      </section>
 
-        <aside className="checkoutCard">
-          <h2>Coleções previstas</h2>
-          <p><strong>CREMENI CORPO</strong><br />Movimento, rotina ativa e prática.</p>
-          <p><strong>CREMENI MENTE</strong><br />Hábitos, equilíbrio e presença.</p>
-          <p><strong>CREMENI PET</strong><br />Convivência, estímulo e cuidados cotidianos.</p>
-          <p><strong>CREMENI JUNTOS</strong><br />Experiências que conectam pessoas, atividade e companhia.</p>
-        </aside>
+      <section className="productSection guideLibrary">
+        <div className="sectionHead split">
+          <div><span className="kicker">BIBLIOTECA</span><h2>Guias em desenvolvimento e publicação.</h2></div>
+          <span>{guides.length} {guides.length === 1 ? 'guia disponível' : 'guias disponíveis'}</span>
+        </div>
+
+        <div className="guideGrid">
+          {guides.map((guide) => (
+            <article className="guideCard" key={guide.id}>
+              <div className="guideCardTop">
+                <span>{guide.collectionName}</span>
+                <small>{guide.status === 'preview' ? 'PRÉVIA' : 'PUBLICADO'}</small>
+              </div>
+              <p>Guia CREMENI nº {String(guide.guideNumber || '').padStart(3, '0')}</p>
+              <h2>{guide.title}</h2>
+              <h3>{guide.subtitle}</h3>
+              <p>{guide.summary}</p>
+              <div className="guideCardMeta">
+                <span>{guide.estimatedPages ? `${guide.estimatedPages} páginas previstas` : guide.formatLabel}</span>
+                {guide.reviewRequired && <span>{guide.reviewStatus === 'approved' ? 'Revisado' : 'Revisão pendente'}</span>}
+              </div>
+              <Link className="primary" href={`/guias/${guide.slug}`}>Abrir guia →</Link>
+            </article>
+          ))}
+        </div>
       </section>
 
       <section className="brandStatement">
-        <div className="shell brandStatementInner">
+        <div className="brandStatementInner">
           <div><span className="kicker light">GOVERNANÇA</span><h2>Guia não é blog genérico.</h2></div>
-          <p>Temas clínicos, veterinários ou de saúde exigem revisão profissional adequada antes de publicação. Os guias podem se relacionar ao catálogo e ao cross-sell, mas não substituem validação técnica especializada.</p>
+          <p>Temas clínicos, veterinários ou de saúde exigem revisão profissional adequada antes de publicação definitiva. A biblioteca pode apoiar produtos, hábitos e relacionamento sem substituir orientação especializada.</p>
         </div>
       </section>
     </main>
