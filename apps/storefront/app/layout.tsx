@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
+import StoreHeader from '@/components/StoreHeader';
 import './globals.css';
+import './header.css';
 
 export const metadata: Metadata = {
   title: 'CREMENI — bom a qualquer hora',
@@ -9,7 +11,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="pt-BR">
-      <body>{children}</body>
+      <body>
+        <StoreHeader />
+        {children}
+      </body>
     </html>
   );
 }
