@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { formatPrice, getProductBySlug } from '@/lib/catalog';
+import AddToCart from '@/components/AddToCart';
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -20,7 +21,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           <p className="productLead">{product.shortDescription || product.description}</p>
           <div className="detailFacts"><div><span>SKU</span><strong>{product.sku}</strong></div><div><span>Modalidade</span><strong>{product.modality}</strong></div><div><span>Personalização</span><strong>{product.personalization}</strong></div></div>
           <div className="priceHold"><small>PREÇO</small><strong>{formatPrice(product.priceCents, product.currency)}</strong><p>{inStock ? 'Disponibilidade confirmada no catálogo.' : 'Preço aprovado. Disponibilidade do fornecedor ainda não confirmada.'}</p></div>
-          <button className="disabledBuy" disabled>{inStock ? 'Compra em integração' : 'Aguardando disponibilidade'}</button>
+          <AddToCart productId={product.id} enabled={inStock && product.priceCents !== null} />
         </div>
       </section>
     </main>
