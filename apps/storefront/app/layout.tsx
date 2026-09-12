@@ -3,6 +3,7 @@ import StoreHeader from '@/components/StoreHeader';
 import './globals.css';
 import './header.css';
 import './guides.css';
+import './guide-pages.css';
 
 export const metadata: Metadata = {
   title: 'CREMENI — bom a qualquer hora',
