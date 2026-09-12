@@ -17,7 +17,7 @@ export default async function StorePage({ searchParams }: { searchParams: Promis
       <section className="productGrid">
         {visible.map((product) => (
           <article className="productCard" key={product.id}>
-            <Link href={`/produto/${product.slug}`} className="productMedia"><span>{product.modality}</span>{product.imageUrl ? <img src={product.imageUrl} alt={product.name} /> : <div>Imagem em homologação</div>}</Link>
+            <Link href={`/produto/${product.slug}`} className="productMedia"><span>{product.modality}</span>{product.imageUrl ? <img src={product.imageUrl} alt={product.name} /> : <div>Imagem aguardando autorização do fornecedor</div>}</Link>
             <div className="productBody"><small>{product.supplier}</small><h2><Link href={`/produto/${product.slug}`}>{product.name}</Link></h2><p>{product.personalization}</p><div className="productFooter"><strong>{formatPrice(product.priceCents, product.currency)}</strong><Link href={`/produto/${product.slug}`}>Ver produto →</Link></div></div>
           </article>
         ))}
