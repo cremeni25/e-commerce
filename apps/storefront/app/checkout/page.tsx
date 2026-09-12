@@ -22,10 +22,7 @@ type Address = {
 type CartItem = {
   quantity: number;
   unit_price_cents: number;
-  products: {
-    name: string;
-    sku: string;
-  } | null;
+  products: { name: string; sku: string } | null;
 };
 
 type ShippingReadiness = {
@@ -37,6 +34,19 @@ type ShippingReadiness = {
   reason: string;
 };
 
+type ShippingOption = {
+  key: 'economical' | 'fastest';
+  label: string;
+  amount_cents: number;
+  estimated_days: number | null;
+  services: Array<{
+    origin_id: string;
+    service_name: string;
+    amount_cents: number;
+    estimated_days: number | null;
+  }>;
+};
+
 type ShippingQuote = {
   quote_id: string;
   provider: string;
@@ -44,6 +54,8 @@ type ShippingQuote = {
   amount_cents: number;
   estimated_days: number | null;
   expires_at: string;
+  selected_option_key?: string;
+  selected_option_label?: string;
 };
 
 const emptyForm = {
@@ -77,6 +89,8 @@ export default function CheckoutPage() {
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
   const [items, setItems] = useState<CartItem[]>([]);
   const [readiness, setReadiness] = useState<ShippingReadiness | null>(null);
+  const [shippingOptions, setShippingOptions] = useState<ShippingOption[]>([]);
+  const [selectedOptionKey, setSelectedOptionKey] = useState<'economical' | 'fastest' | null>(null);
   const [quote, setQuote] = useState<ShippingQuote | null>(null);
   const [form, setForm] = useState(emptyForm);
   const [message, setMessage] = useState('');
@@ -86,13 +100,14 @@ export default function CheckoutPage() {
   const [creatingOrder, setCreatingOrder] = useState(false);
   const [orderId, setOrderId] = useState<string | null>(null);
 
-  useEffect(() => {
-    void loadCheckout();
-  }, []);
+  useEffect(() => { void loadCheckout(); }, []);
 
   async function loadCheckout() {
     setLoading(true);
     setQuote(null);
+    setShippingOptions([]);
+    setSelectedOptionKey(null);
+
     const { data: auth } = await supabase.auth.getUser();
     const user = auth.user;
     setUserId(user?.id || null);
@@ -146,9 +161,16 @@ export default function CheckoutPage() {
 
   const total = subtotal + (quote?.amount_cents || 0);
   const selectedAddress = addresses.find((address) => address.id === selectedAddressId) || null;
+  const selectedOption = shippingOptions.find((option) => option.key === selectedOptionKey) || null;
 
   function updateField(field: keyof typeof emptyForm, value: string) {
     setForm((current) => ({ ...current, [field]: value }));
+  }
+
+  function resetShippingSelection() {
+    setShippingOptions([]);
+    setSelectedOptionKey(null);
+    setQuote(null);
   }
 
   async function lookupPostalCode() {
@@ -216,11 +238,11 @@ export default function CheckoutPage() {
     await loadCheckout();
   }
 
-  async function calculateShipping() {
+  async function requestShippingOptions() {
     if (!selectedAddressId || !readiness?.ready) return;
     setQuoting(true);
-    setMessage('Consultando frete real…');
-    setQuote(null);
+    setMessage('Consultando modalidades de frete reais…');
+    resetShippingSelection();
 
     const { data, error } = await supabase.functions.invoke('shipping-quote', {
       body: { address_id: selectedAddressId },
@@ -238,7 +260,7 @@ export default function CheckoutPage() {
         }
       }
       if (code === 'logistics_provider_not_configured') {
-        setMessage('A integração logística está pronta, mas o token de homologação do Melhor Envio ainda não foi conectado.');
+        setMessage('A integração logística está pronta, mas a credencial de homologação do provedor ainda não foi conectada.');
       } else {
         setMessage('A cotação real não pôde ser concluída. Nenhum valor fictício foi aplicado.');
       }
@@ -246,8 +268,31 @@ export default function CheckoutPage() {
       return;
     }
 
+    const options = Array.isArray(data.options) ? data.options as ShippingOption[] : [];
+    setShippingOptions(options);
+    setSelectedOptionKey(options[0]?.key || null);
+    setMessage(options.length ? 'Modalidades calculadas com dados reais do provedor. Escolha uma opção.' : 'Nenhuma modalidade de entrega foi disponibilizada.');
+    setQuoting(false);
+  }
+
+  async function confirmShippingOption() {
+    if (!selectedAddressId || !selectedOptionKey || !readiness?.ready) return;
+    setQuoting(true);
+    setMessage('Revalidando a modalidade escolhida…');
+    setQuote(null);
+
+    const { data, error } = await supabase.functions.invoke('shipping-quote', {
+      body: { address_id: selectedAddressId, selected_option_key: selectedOptionKey },
+    });
+
+    if (error || !data?.quote_id) {
+      setMessage('A modalidade escolhida não pôde ser confirmada. A cotação será refeita antes de qualquer pedido.');
+      setQuoting(false);
+      return;
+    }
+
     setQuote(data as ShippingQuote);
-    setMessage('Frete cotado em tempo real.');
+    setMessage('Modalidade de entrega confirmada com nova cotação real.');
     setQuoting(false);
   }
 
@@ -274,9 +319,7 @@ export default function CheckoutPage() {
     setCreatingOrder(false);
   }
 
-  if (loading) {
-    return <main className="checkoutPage shell"><p>Carregando checkout…</p></main>;
-  }
+  if (loading) return <main className="checkoutPage shell"><p>Carregando checkout…</p></main>;
 
   if (!userEmail) {
     return (
@@ -314,7 +357,7 @@ export default function CheckoutPage() {
                     checked={selectedAddressId === address.id}
                     onChange={() => {
                       setSelectedAddressId(address.id);
-                      setQuote(null);
+                      resetShippingSelection();
                     }}
                   />
                   <span>
@@ -349,14 +392,34 @@ export default function CheckoutPage() {
         <aside className="checkoutCard checkoutSummary">
           <h2>Resumo</h2>
           <div><span>Subtotal</span><strong>{money(subtotal)}</strong></div>
-          <div><span>Frete</span><strong>{quote ? money(quote.amount_cents) : 'A calcular'}</strong></div>
+          <div><span>Frete</span><strong>{quote ? money(quote.amount_cents) : selectedOption ? money(selectedOption.amount_cents) : 'A calcular'}</strong></div>
           <div><span>Total</span><strong>{quote ? money(total) : 'A confirmar'}</strong></div>
 
           <p className="checkoutNotice">{readinessMessage(readiness)}</p>
 
+          {shippingOptions.length > 0 && !quote && (
+            <div className="addressList">
+              {shippingOptions.map((option) => (
+                <label className="addressOption" key={option.key}>
+                  <input
+                    type="radio"
+                    name="shipping-option"
+                    checked={selectedOptionKey === option.key}
+                    onChange={() => setSelectedOptionKey(option.key)}
+                  />
+                  <span>
+                    <strong>{option.label} · {money(option.amount_cents)}</strong>
+                    <small>{option.estimated_days != null ? `Prazo estimado: até ${option.estimated_days} dia(s)` : 'Prazo informado pelo provedor na cotação.'}</small>
+                    {option.services.map((service) => <small key={`${option.key}-${service.origin_id}`}>{service.service_name}</small>)}
+                  </span>
+                </label>
+              ))}
+            </div>
+          )}
+
           {quote && (
             <p className="checkoutNotice">
-              <strong>{quote.service_name}</strong><br />
+              <strong>{quote.selected_option_label || quote.service_name}</strong><br />
               {quote.estimated_days != null ? `Prazo estimado: até ${quote.estimated_days} dia(s).` : 'Prazo informado pela transportadora no momento da cotação.'}
             </p>
           )}
@@ -365,10 +428,21 @@ export default function CheckoutPage() {
             className="primary"
             type="button"
             disabled={!selectedAddressId || !readiness?.ready || quoting || Boolean(orderId)}
-            onClick={calculateShipping}
+            onClick={requestShippingOptions}
           >
-            {quoting ? 'Cotando…' : quote ? 'Recalcular frete' : 'Calcular frete real'}
+            {quoting ? 'Consultando…' : shippingOptions.length ? 'Recalcular modalidades' : 'Calcular frete real'}
           </button>
+
+          {shippingOptions.length > 0 && !quote && (
+            <button
+              className="secondary"
+              type="button"
+              disabled={!selectedOptionKey || quoting || Boolean(orderId)}
+              onClick={confirmShippingOption}
+            >
+              Confirmar modalidade escolhida
+            </button>
+          )}
 
           <button
             className="primary"
