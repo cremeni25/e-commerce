@@ -34,7 +34,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
       {isPreview && (
         <section className="guidePreviewNotice">
           <strong>Prévia editorial em homologação</strong>
-          <p>As {totalPages} páginas já existem como experiência digital. O conteúdo permanece em prévia até a revisão profissional prevista para temas de saúde e bem-estar.</p>
+          <p>Conteúdo pesquisado e estruturado com referências internacionais. A publicação definitiva continua condicionada à revisão profissional dos temas de saúde, segurança e bem-estar.</p>
         </section>
       )}
 
@@ -44,6 +44,25 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
         <section className="guideSafety">
           <strong>Uso responsável</strong>
           <p>{guide.safetyNote}</p>
+        </section>
+      )}
+
+      {guide.references.length > 0 && (
+        <section className="guideReferenceLibrary">
+          <div>
+            <span className="kicker">BASE EDITORIAL INTERNACIONAL</span>
+            <h2>Pesquisa rastreável, não opinião solta.</h2>
+            <p>As referências abaixo sustentam a construção editorial desta prévia. A CREMENI usa fontes de saúde pública, medicina veterinária e bem-estar animal reconhecidas internacionalmente.</p>
+          </div>
+          <div className="guideReferenceGrid">
+            {guide.references.map((reference) => (
+              <a key={`${reference.organization}-${reference.title}`} href={reference.url} target="_blank" rel="noreferrer">
+                <span>{reference.organization}</span>
+                <strong>{reference.title}</strong>
+                <small>Abrir fonte ↗</small>
+              </a>
+            ))}
+          </div>
         </section>
       )}
 
