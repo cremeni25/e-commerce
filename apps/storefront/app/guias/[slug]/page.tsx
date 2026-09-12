@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import GuideTracker from '@/components/GuideTracker';
+import GuideReader from '@/components/GuideReader';
 import { getGuideBySlug } from '@/lib/guides';
 
 export default async function GuidePage({ params }: { params: Promise<{ slug: string }> }) {
@@ -34,44 +35,11 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
       {isPreview && (
         <section className="guidePreviewNotice">
           <strong>Prévia editorial em homologação</strong>
-          <p>As 12 páginas abaixo já existem como experiência digital. O conteúdo permanece em prévia até a revisão profissional prevista para temas de saúde e bem-estar.</p>
+          <p>As {totalPages} páginas já existem como experiência digital. O conteúdo permanece em prévia até a revisão profissional prevista para temas de saúde e bem-estar.</p>
         </section>
       )}
 
-      <section className="guideContents" id="indice-topo" aria-label="Índice do guia">
-        <div>
-          <span className="kicker">ÍNDICE</span>
-          <h2>12 páginas para construir uma rotina possível.</h2>
-          <p>{guide.intro}</p>
-        </div>
-        <nav>
-          {guide.sections.map((section, index) => (
-            <a key={`${section.title}-${index}`} href={`#pagina-${index + 1}`}>
-              <span>{String(index + 1).padStart(2, '0')}</span>
-              <strong>{section.title}</strong>
-            </a>
-          ))}
-        </nav>
-      </section>
-
-      <section className="guideEditorial guidePages">
-        {guide.sections.map((section, index) => (
-          <article id={`pagina-${index + 1}`} key={`${section.title}-${index}`}>
-            <div className="guidePageMarker">
-              <span>PÁGINA</span>
-              <strong>{String(index + 1).padStart(2, '0')}</strong>
-              <small>de {String(totalPages).padStart(2, '0')}</small>
-            </div>
-            <div>
-              <h2>{section.title}</h2>
-              <ul>
-                {section.items.map((item) => <li key={item}>{item}</li>)}
-              </ul>
-              <a className="guideBackToIndex" href="#indice-topo">Voltar ao índice ↑</a>
-            </div>
-          </article>
-        ))}
-      </section>
+      <GuideReader sections={guide.sections} intro={guide.intro} />
 
       {guide.slug === 'caminhar-juntos' && <GuideTracker guideSlug={guide.slug} />}
 
