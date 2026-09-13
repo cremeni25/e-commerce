@@ -16,11 +16,18 @@ PET MIMOS opera por curadoria. O objetivo não é importar catálogo, mas seleci
 - Endereço institucional público: Alameda Ezequiel Mantoanelli, 375, Loteamento Green View Village, Indaiatuba/SP, CEP 13340-350.
 - ATENÇÃO: o endereço institucional não deve ser usado como CEP de origem de frete sem confirmação de que é o centro expedidor dos SKUs.
 - Catálogo público consultado: 136 produtos.
+- PET START: R$49,90/mês, até 30 pedidos/mês, 5% OFF no Pix.
+- PET SCALE: R$99,90/mês, pedidos ilimitados, 15% OFF no Pix.
+- Decisão atual: NÃO ASSINAR antes da confirmação logística e técnica dos SKUs.
 
 ### Dropet
 - Operação de dropshipping nacional em Santa Catarina.
 - Produto público exibe estoque, peso bruto, dimensões e tipo de embalagem em vários SKUs.
 - Mantida como fornecedor complementar e/ou contingência.
+- Plano PRO: R$99,90/mês, sem pedido mínimo, 15% OFF no Pix.
+- Plano PREMIUM: R$199,90/mês, 20% OFF no Pix e recursos adicionais de embalagem/marca.
+- Fretes, inclusive reversos, são de responsabilidade do lojista segundo a política pública.
+- Decisão atual: NÃO ASSINAR antes de confirmar CEP de origem, integração e custo por pedido.
 
 ### Dinka
 - Mantida para personalização.
@@ -69,6 +76,19 @@ PET MIMOS opera por curadoria. O objetivo não é importar catálogo, mas seleci
 - Dimensões: 15,5 x 0,8 x 15,5 cm
 - Embalagem unitária: envelope de segurança
 - Status CREMENI: BACKUP / candidato a substituição do tapete de lamber se logística for superior
+
+## Gate financeiro de contratação
+
+A assinatura de fornecedor só será aprovada depois que a CREMENI souber:
+- custo líquido real por SKU dentro do plano escolhido;
+- custo fixo mensal do plano diluído pelo volume real de pedidos;
+- custo de frete e reverso;
+- taxas de pagamento;
+- tributação aplicável;
+- custo de embalagem/fulfillment, se houver;
+- margem de contribuição por pedido e por carrinho.
+
+O plano mais barato não será escolhido automaticamente. O critério será maior margem de contribuição sustentável com menor risco operacional.
 
 ## Bloqueios antes de cadastro comercial
 
