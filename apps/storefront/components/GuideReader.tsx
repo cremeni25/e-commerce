@@ -47,7 +47,7 @@ export default function GuideReader({ sections, intro, guideSlug }: GuideReaderP
       <section id="guide-reader" className="guideContents" aria-label="Índice do guia">
         <div className="guideContentsIntro">
           <span className="kicker">ÍNDICE</span>
-          <h2>{total} páginas para construir uma rotina possível.</h2>
+          <h2>{total} páginas para aprofundar o tema.</h2>
           <p>{intro}</p>
         </div>
         <nav>
@@ -86,7 +86,7 @@ export default function GuideReader({ sections, intro, guideSlug }: GuideReaderP
             <strong>{String(activeIndex + 1).padStart(2, '0')}</strong>
             <small>de {String(total).padStart(2, '0')}</small>
           </div>
-          <div className="guidePageTheme">CAMINHAR JUNTOS</div>
+          <div className="guidePageTheme">GUIAS CREMENI</div>
         </aside>
 
         <div className="guideSinglePageBody">
@@ -112,7 +112,7 @@ export default function GuideReader({ sections, intro, guideSlug }: GuideReaderP
 
             <aside className="guidePracticePanel">
               <span className="guideMiniLabel">APLICAÇÃO PRÁTICA</span>
-              <strong>Leve para a próxima caminhada</strong>
+              <strong>Leve esta ideia para a sua rotina</strong>
               <p>{section.practice || 'Observe a rotina real e ajuste apenas o que for necessário para manter conforto e consistência.'}</p>
 
               {section.sources && section.sources.length > 0 && (
